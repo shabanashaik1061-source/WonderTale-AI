@@ -1,0 +1,3881 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>WonderTale AI Studio</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body {
+            font-family: Inter, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #312e81,
+                    #111827 40%,
+                    #020617
+                );
+
+            min-height: 100vh;
+        }
+
+        .font-story {
+            font-family: Nunito, sans-serif;
+        }
+
+        .glass {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(18px);
+        }
+
+        .scene-card {
+            background: rgba(15,23,42,0.88);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .gradient-text {
+            background:
+                linear-gradient(
+                    90deg,
+                    #c4b5fd,
+                    #f9a8d4,
+                    #fde68a
+                );
+
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+
+            border:
+                4px solid
+                rgba(255,255,255,0.15);
+
+            border-top-color:
+                #a78bfa;
+
+            border-radius: 50%;
+
+            animation:
+                spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        audio {
+            width: 100%;
+        }
+
+        input[type="range"] {
+            accent-color: #a78bfa;
+        }
+
+    </style>
+
+</head>
+
+
+<body class="text-white">
+
+
+<!-- ======================================================
+HEADER
+====================================================== -->
+
+<header
+    class="border-b border-white/10 bg-black/20 backdrop-blur-xl"
+>
+
+    <div
+        class="max-w-7xl mx-auto px-5 py-4 flex justify-between items-center"
+    >
+
+        <div class="flex items-center gap-3">
+
+            <div
+                class="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center text-xl"
+            >
+                ✨
+            </div>
+
+            <div>
+
+                <h1 class="font-story font-black text-xl">
+                    WonderTale AI
+                </h1>
+
+                <p class="text-xs text-slate-400">
+                    Cinematic AI Story Studio
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="backend-status"
+            class="px-3 py-2 rounded-full bg-yellow-500/10 text-yellow-300 text-sm"
+        >
+            ● Connecting
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ======================================================
+MAIN
+====================================================== -->
+
+<main class="max-w-7xl mx-auto px-5 py-8">
+
+
+<!-- HERO -->
+
+<section class="text-center mb-10">
+
+    <div
+        class="inline-block px-4 py-2 rounded-full glass text-sm text-violet-200 mb-5"
+    >
+        ✨ WonderTale AI Story Studio
+    </div>
+
+    <h2
+        class="font-story text-4xl md:text-6xl font-black"
+    >
+
+        Turn stories into
+
+        <span class="gradient-text">
+            narrated worlds
+        </span>
+
+    </h2>
+
+    <p
+        class="max-w-2xl mx-auto mt-4 text-slate-400"
+    >
+
+        Generate a story, create cinematic images,
+        generate AI narration and turn everything
+        into a finished MP4 video.
+
+    </p>
+
+</section>
+
+
+<!-- ======================================================
+STORY INPUT
+====================================================== -->
+
+<section
+    class="glass rounded-3xl p-6 md:p-8 mb-10"
+>
+
+    <h2
+        class="font-story font-black text-2xl mb-5"
+    >
+        🪄 Story Studio
+    </h2>
+
+
+    <textarea
+        id="story-prompt"
+        rows="5"
+        placeholder="Example: A brave little dragon discovers a magical crystal inside a snowy mountain and must protect his village from a storm."
+        class="w-full rounded-2xl bg-black/30 border border-white/10 p-4 outline-none resize-none"
+    ></textarea>
+
+
+    <input
+        id="character-anchor"
+        type="text"
+        placeholder="Character seed: Ember, a small golden dragon with sapphire eyes, blue wings and a red scarf"
+        class="mt-4 w-full rounded-xl bg-black/30 border border-white/10 p-4 outline-none"
+    >
+
+
+    <div
+        class="grid md:grid-cols-3 lg:grid-cols-4 gap-4 mt-5"
+    >
+
+        <!-- STORY LENGTH -->
+
+        <div>
+
+            <label class="text-sm font-semibold">
+                Story Length
+            </label>
+
+            <select
+                id="story-length"
+                class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
+            >
+
+                <option value="0.5">
+                    30 seconds
+                </option>
+                <option value="1">
+                    1 minute
+                </option>
+
+                <option value="2">
+                    2 minutes
+                </option>
+
+                <option value="4">
+                    4 minutes
+                </option>
+
+                <option value="10" selected>
+                    10 minutes
+                </option>
+
+                <option value="12">
+                    12 minutes
+                </option>
+
+                <option value="15">
+                    15 minutes
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SCENE COUNT -->
+
+        <div>
+
+            <label class="text-sm font-semibold">
+                Scene Count
+            </label>
+
+            <select
+                id="scene-count"
+                class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
+            >
+
+                <option value="4">4 Scenes</option>
+                <option value="5">5 Scenes</option>
+                <option value="6">6 Scenes</option>
+                <option value="7">7 Scenes</option>
+                <option value="8" selected>8 Scenes</option>
+                <option value="9">9 Scenes</option>
+                <option value="10">10 Scenes</option>
+                <option value="11">11 Scenes</option>
+                <option value="12">12 Scenes</option>
+                <option value="13">13 Scenes</option>
+                <option value="14">14 Scenes</option>
+                <option value="15">15 Scenes</option>
+                <option value="16">16 Scenes</option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ASPECT RATIO -->
+
+        <div>
+
+            <label class="text-sm font-semibold">
+                Aspect Ratio
+            </label>
+
+            <select
+                id="aspect-ratio"
+                class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
+            >
+
+                <option value="16:9">
+                    16:9 YouTube
+                </option>
+
+                <option value="9:16">
+                    9:16 Shorts
+                </option>
+
+                <option value="1:1">
+                    1:1 Square
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- VOICE -->
+
+        <div>
+
+            <label class="text-sm font-semibold">
+                Voice
+            </label>
+
+            <select
+                id="voice-profile"
+                class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
+            >
+
+                <option value="fable">
+    Fable — Storyteller(female)
+</option>
+
+<option value="rachel">
+    Rachel — Narrator(kid)
+</option>
+
+<option value="onyx">
+    Onyx — Deep(male)
+</option>
+
+<option value="nova">
+    Nova — Warm AI
+</option>
+
+<option value="coral">
+    Coral — Friendly AI
+</option>
+            </select>
+
+        </div>
+
+
+        <!-- SUBTITLES -->
+
+        <div>
+
+            <label class="text-sm font-semibold">
+                Subtitles
+            </label>
+
+            <select
+                id="subtitles"
+                class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
+            >
+
+                <option value="off" selected>
+                    Off
+                </option>
+
+                <option value="on">
+                    On
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- MUSIC -->
+
+        <div>
+
+            <label class="text-sm font-semibold">
+                Background Music
+            </label>
+
+            <select
+                id="background-music"
+                class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
+            >
+
+                <option value="none" selected>
+                    None
+                </option>
+
+                <option value="fantasy">
+                    ✨ Fantasy
+                </option>
+
+                <option value="adventure">
+                    🗺️ Adventure
+                </option>
+
+                <option value="calm">
+                    🌿 Calm
+                </option>
+
+                <option value="suspense">
+                    🌑 Suspense
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- MUSIC VOLUME -->
+
+        <div>
+
+            <label class="text-sm font-semibold">
+                Music Volume:
+                <span id="music-volume-label">
+                    50%
+                </span>
+            </label>
+
+            <input
+                id="music-volume"
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+                class="mt-3 w-full"
+            >
+
+        </div>
+
+    </div>
+
+
+    <button
+        type="button"
+        id="generate-story-button"
+        onclick="generateStory()"
+        class="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-pink-600 font-bold text-lg hover:opacity-90 transition"
+    >
+        ✨ Generate AI Story
+    </button>
+
+
+    <div
+        id="status"
+        class="hidden mt-5 glass rounded-2xl p-4 text-center"
+    ></div>
+
+</section>
+
+
+<!-- ======================================================
+STORY RESULT
+====================================================== -->
+
+<section
+    id="story-result"
+    class="hidden"
+>
+
+
+<!-- STORY INFO -->
+
+<div
+    class="glass rounded-3xl p-6 md:p-8 mb-8"
+>
+
+    <p
+        class="text-xs uppercase tracking-widest text-violet-300"
+    >
+        AI STORY ENGINE
+    </p>
+
+    <h1
+        id="story-title"
+        class="font-story text-4xl font-black mt-2"
+    ></h1>
+
+    <p
+        id="story-concept"
+        class="text-slate-400 mt-4 leading-relaxed"
+    ></p>
+
+
+    <h2
+        class="font-story font-bold text-xl mt-7 mb-4"
+    >
+        👥 Characters
+    </h2>
+
+    <div
+        id="characters"
+        class="grid md:grid-cols-2 gap-4"
+    ></div>
+
+</div>
+
+
+<!-- SCENES -->
+
+<div class="flex justify-between items-center mb-5">
+
+    <h2
+        class="font-story text-3xl font-black"
+    >
+        🎬 Story Scenes
+    </h2>
+
+    <span
+        id="scene-count-label"
+        class="glass px-4 py-2 rounded-full text-sm"
+    ></span>
+
+</div>
+
+
+<div
+    id="scenes"
+    class="space-y-8"
+></div>
+
+
+<!-- ======================================================
+STAGE 4 — VOICE
+====================================================== -->
+
+<div
+    class="glass rounded-3xl p-6 mt-10"
+>
+
+    <div class="text-center">
+
+        <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-500/10 text-pink-300 text-sm"
+        >
+            🎙️ Stage 4
+        </div>
+
+        <h2
+            class="font-story text-3xl font-black mt-4"
+        >
+            AI Voice Engine
+        </h2>
+
+        <p
+            class="text-slate-400 mt-2 max-w-2xl mx-auto"
+        >
+            Turn every scene's narration into
+            a real audio file for the final video.
+        </p>
+
+    </div>
+
+
+    <div
+        id="voice-summary"
+        class="hidden mt-6"
+    ></div>
+
+
+    <button
+        id="generate-audio-button"
+        onclick="generateAllAudio()"
+        class="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-pink-600 to-violet-600 font-bold text-lg hover:opacity-90 transition"
+    >
+        🎙️ Generate All Narration
+    </button>
+
+</div>
+
+
+<!-- ======================================================
+STAGE 3 — AI VIDEO
+====================================================== -->
+
+<div
+    class="glass rounded-3xl p-6 mt-10 text-center"
+>
+
+    <div
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-300 text-sm"
+    >
+        🎥 Stage 3
+    </div>
+
+    <h2
+        class="font-story text-2xl font-black mt-4"
+    >
+        AI Video Clips
+    </h2>
+
+    <p
+        class="text-slate-400 mt-2"
+    >
+        Optional cinematic AI video clips using Pollinations.
+    </p>
+
+
+    <button
+        id="generate-videos-button"
+        onclick="generateAllVideos()"
+        class="mt-6 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-cyan-600 font-bold hover:opacity-90 transition"
+    >
+        🎬 Generate All Scene Videos
+    </button>
+
+
+    <p
+        class="text-xs text-slate-500 mt-4"
+    >
+        This feature requires available Pollinations video-generation balance.
+    </p>
+
+</div>
+
+
+<!-- VIDEO SUMMARY -->
+
+<div
+    id="video-summary"
+    class="hidden glass rounded-3xl p-6 mt-8"
+>
+
+    <h2
+        class="font-story text-2xl font-black"
+    >
+        🎞️ Generated Video Clips
+    </h2>
+
+    <div
+        id="video-list"
+        class="mt-5 grid md:grid-cols-2 gap-5"
+    ></div>
+
+</div>
+
+
+</section>
+
+
+<!-- ======================================================
+STAGE 5 — FINAL MP4
+====================================================== -->
+
+<section
+    class="glass rounded-3xl p-6 mt-10"
+>
+
+    <div class="flex items-center gap-3">
+
+        <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 text-violet-300 text-sm"
+        >
+            🎬 Stage 5
+        </div>
+
+    </div>
+
+
+    <h2
+        class="font-story text-3xl font-black mt-4"
+    >
+        Final MP4 Video
+    </h2>
+
+
+    <p
+        class="text-slate-400 mt-2"
+    >
+        Combine your scene images, narration, subtitles and background music into one final MP4.
+    </p>
+
+
+    <!-- FINAL VIDEO SETTINGS SUMMARY -->
+
+    <div
+        id="final-video-settings"
+        class="grid md:grid-cols-3 gap-3 mt-5"
+    >
+
+        <div class="rounded-2xl bg-black/20 border border-white/10 p-4">
+
+            <p class="text-xs text-slate-500">
+                Subtitles
+            </p>
+
+            <p
+                id="final-subtitle-setting"
+                class="font-semibold mt-1"
+            >
+                Off
+            </p>
+
+        </div>
+
+
+        <div class="rounded-2xl bg-black/20 border border-white/10 p-4">
+
+            <p class="text-xs text-slate-500">
+                Music
+            </p>
+
+            <p
+                id="final-music-setting"
+                class="font-semibold mt-1"
+            >
+                None
+            </p>
+
+        </div>
+
+
+        <div class="rounded-2xl bg-black/20 border border-white/10 p-4">
+
+            <p class="text-xs text-slate-500">
+                Aspect Ratio
+            </p>
+
+            <p
+                id="final-aspect-setting"
+                class="font-semibold mt-1"
+            >
+                16:9
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <button
+        id="generate-final-video-button"
+        onclick="generateFinalVideo()"
+        class="mt-6 w-full py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-pink-600 text-white font-bold text-lg hover:opacity-90 transition"
+    >
+        🎬 Generate Final MP4
+    </button>
+
+
+    <div
+        id="finalVideoStatus"
+        class="mt-5 text-sm text-slate-300"
+    ></div>
+
+
+    <div
+        id="finalVideoContainer"
+        class="mt-6 hidden"
+    >
+
+        <video
+            id="finalVideoPlayer"
+            controls
+            class="w-full rounded-2xl shadow-xl bg-black"
+        ></video>
+
+
+        <a
+            id="finalVideoDownload"
+            href="#"
+            target="_blank"
+            class="inline-block mt-4 px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-500"
+        >
+            ⬇️ Open Generated MP4
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+STAGE 8 — YOUTUBE
+====================================================== -->
+
+<section
+    id="youtube-publish-section"
+    class="glass rounded-3xl p-6 mt-10"
+>
+
+    <div class="flex items-center justify-between flex-wrap gap-3">
+
+        <div>
+
+            <div
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 text-red-300 text-sm"
+            >
+                📺 Stage 8
+            </div>
+
+            <h2
+                class="font-story text-3xl font-black mt-4"
+            >
+                Publish to YouTube
+            </h2>
+
+            <p class="text-sm text-slate-400 mt-2">
+                Publish your finished WonderTale video directly to your YouTube channel.
+            </p>
+
+        </div>
+
+
+        <div
+            id="youtubeConnectionStatus"
+            class="px-3 py-2 rounded-full text-sm font-semibold bg-white/10 text-slate-300"
+        >
+            Checking YouTube...
+        </div>
+
+    </div>
+
+
+    <!-- ACCOUNT -->
+
+    <div
+        id="youtubeAccountBox"
+        class="hidden mt-6 p-5 rounded-2xl bg-black/20 border border-white/10"
+    >
+
+        <div class="flex items-center gap-4">
+
+            <img
+                id="youtubeChannelThumbnail"
+                src=""
+                alt="YouTube Channel"
+                class="w-14 h-14 rounded-full border border-white/10"
+            >
+
+            <div>
+
+                <p class="text-xs text-slate-500">
+                    Connected YouTube Channel
+                </p>
+
+                <p
+                    id="youtubeChannelName"
+                    class="font-bold text-lg mt-1"
+                >
+                    —
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NOT CONNECTED -->
+
+    <div
+        id="youtubeNotConnected"
+        class="hidden mt-6 p-5 rounded-2xl bg-red-500/10 border border-red-500/20"
+    >
+
+        <p class="font-semibold text-red-300">
+            YouTube is not connected.
+        </p>
+
+        <p class="text-sm text-slate-400 mt-1">
+            Connect your YouTube account before publishing.
+        </p>
+
+        <button
+            onclick="connectYouTube()"
+            class="mt-4 px-5 py-3 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-500"
+        >
+            🔗 Connect YouTube
+        </button>
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <div
+        id="youtubePublishForm"
+        class="hidden mt-7"
+    >
+
+        <div class="grid md:grid-cols-2 gap-5">
+
+            <!-- TITLE -->
+
+            <div class="md:col-span-2">
+
+                <label
+                    for="youtubeTitle"
+                    class="block text-sm font-semibold text-slate-300 mb-2"
+                >
+                    Video Title
+                </label>
+
+                <input
+                    id="youtubeTitle"
+                    type="text"
+                    maxlength="100"
+                    placeholder="Enter YouTube title"
+                    class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="md:col-span-2">
+
+                <label
+                    for="youtubeDescription"
+                    class="block text-sm font-semibold text-slate-300 mb-2"
+                >
+                    Description
+                </label>
+
+                <textarea
+                    id="youtubeDescription"
+                    rows="5"
+                    placeholder="Enter video description"
+                    class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+                ></textarea>
+
+            </div>
+
+
+            <!-- TAGS -->
+
+            <div>
+
+                <label
+                    for="youtubeTags"
+                    class="block text-sm font-semibold text-slate-300 mb-2"
+                >
+                    Tags
+                </label>
+
+                <input
+                    id="youtubeTags"
+                    type="text"
+                    placeholder="kids story, fantasy, fairy tale"
+                    class="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+
+                <p class="text-xs text-slate-500 mt-2">
+                    Separate tags with commas.
+                </p>
+
+            </div>
+
+
+            <!-- PRIVACY -->
+
+            <div>
+
+                <label
+                    for="youtubePrivacy"
+                    class="block text-sm font-semibold text-slate-300 mb-2"
+                >
+                    Visibility
+                </label>
+
+                <select
+                    id="youtubePrivacy"
+                    class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+
+                    <option value="unlisted">
+                        Unlisted
+                    </option>
+
+                    <option value="private">
+                        Private
+                    </option>
+
+                    <option value="public">
+                        Public
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="youtubePublishButton"
+            onclick="publishToYouTube()"
+            class="mt-6 px-7 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-500 transition"
+        >
+            📺 Publish to YouTube
+        </button>
+
+
+        <div
+            id="youtubeUploadStatus"
+            class="mt-4 text-sm text-slate-400"
+        ></div>
+
+
+        <div
+            id="youtubeUploadSuccess"
+            class="hidden mt-5 p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20"
+        >
+
+            <p class="font-bold text-emerald-300">
+                🎉 Video published successfully!
+            </p>
+
+            <a
+                id="youtubeVideoLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-block mt-3 px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-500"
+            >
+                ▶ Open on YouTube
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+STAGE 6 — LIBRARY
+====================================================== -->
+
+<section
+    id="video-library-section"
+    class="mt-10"
+>
+
+    <div class="flex items-center justify-between mb-6">
+
+        <div>
+
+            <h2 class="font-story text-3xl font-black">
+                📚 My Videos
+            </h2>
+
+            <p class="text-slate-400 text-sm mt-1">
+                Your generated WonderTale videos
+            </p>
+
+        </div>
+
+        <button
+            onclick="loadVideoLibrary()"
+            class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm transition"
+        >
+            🔄 Refresh
+        </button>
+
+    </div>
+
+
+    <div
+        id="library-loading"
+        class="hidden text-center py-10 text-slate-400"
+    >
+        Loading your videos...
+    </div>
+
+
+    <div
+        id="library-empty"
+        class="hidden text-center py-14 rounded-2xl border border-white/10 bg-white/5"
+    >
+
+        <div class="text-5xl mb-4">
+            🎬
+        </div>
+
+        <h3 class="text-xl font-semibold text-white">
+            No videos yet
+        </h3>
+
+        <p class="text-slate-400 mt-2">
+            Generate your first WonderTale video and it will appear here.
+        </p>
+
+    </div>
+
+
+    <div
+        id="video-library-grid"
+        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+    ></div>
+
+</section>
+
+
+<!-- ERROR -->
+
+<div
+    id="error"
+    class="hidden mt-8 rounded-2xl bg-red-500/10 border border-red-500/30 p-5 text-red-200"
+></div>
+
+
+</main>
+
+
+<script>
+
+const API_BASE = "/api";
+
+let currentStory = null;
+
+let youtubeConnected = false;
+let youtubeChannel = null;
+
+
+/* ============================================================
+HELPERS
+============================================================ */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function showStatus(message) {
+
+    const status =
+        document.getElementById("status");
+
+    status.classList.remove("hidden");
+
+    status.innerHTML = `
+
+        <div class="flex items-center justify-center gap-3">
+
+            <div class="spinner"></div>
+
+            <span>
+                ${escapeHTML(message)}
+            </span>
+
+        </div>
+
+    `;
+
+}
+
+
+function hideStatus() {
+
+    document
+        .getElementById("status")
+        .classList.add("hidden");
+
+}
+
+
+function showError(message) {
+
+    const error =
+        document.getElementById("error");
+
+    error.classList.remove("hidden");
+
+    error.innerHTML = `
+
+        <strong>⚠️ Error</strong>
+
+        <p class="mt-2 text-sm">
+            ${escapeHTML(message)}
+        </p>
+
+    `;
+
+}
+
+
+function hideError() {
+
+    document
+        .getElementById("error")
+        .classList.add("hidden");
+
+}
+
+
+/* ============================================================
+MUSIC SLIDER
+============================================================ */
+
+document
+    .getElementById("music-volume")
+    .addEventListener("input", function () {
+
+        document
+            .getElementById("music-volume-label")
+            .textContent = `${this.value}%`;
+
+    });
+
+
+/* ============================================================
+BACKEND HEALTH
+============================================================ */
+
+async function checkBackend() {
+
+    const status =
+        document.getElementById("backend-status");
+
+    try {
+
+        const response =
+            await fetch(`${API_BASE}/health`);
+
+        const data =
+            await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error("Backend health check failed");
+        }
+
+        if (data.imageGeneration) {
+
+            status.textContent =
+                "● AI Backend Ready";
+
+            status.className =
+                "px-3 py-2 rounded-full bg-emerald-500/10 text-emerald-300 text-sm";
+
+        } else {
+
+            status.textContent =
+                "● API Key Missing";
+
+            status.className =
+                "px-3 py-2 rounded-full bg-red-500/10 text-red-300 text-sm";
+
+        }
+
+    } catch (error) {
+
+        console.error("BACKEND CHECK:", error);
+
+        status.textContent =
+            "● Backend Offline";
+
+        status.className =
+            "px-3 py-2 rounded-full bg-red-500/10 text-red-300 text-sm";
+
+    }
+
+}
+
+
+/* ============================================================
+GET VIDEO SETTINGS
+============================================================ */
+
+function getVideoSettings() {
+
+    const subtitles =
+        document.getElementById("subtitles").value;
+
+    const backgroundMusic =
+        document.getElementById("background-music").value;
+
+    const musicVolume =
+        Number(
+            document.getElementById("music-volume").value
+        );
+
+    const aspectRatio =
+        document.getElementById("aspect-ratio").value;
+
+    return {
+        subtitles,
+        backgroundMusic,
+        musicVolume,
+        aspectRatio
+    };
+
+}
+
+
+function updateFinalVideoSettings() {
+
+    const settings =
+        getVideoSettings();
+
+    document.getElementById(
+        "final-subtitle-setting"
+    ).textContent =
+        settings.subtitles === "on"
+            ? "On"
+            : "Off";
+
+    document.getElementById(
+        "final-music-setting"
+    ).textContent =
+        settings.backgroundMusic === "none"
+            ? "None"
+            : `${settings.backgroundMusic} · ${settings.musicVolume}%`;
+
+    document.getElementById(
+        "final-aspect-setting"
+    ).textContent =
+        settings.aspectRatio;
+
+}
+
+
+[
+    "subtitles",
+    "background-music",
+    "music-volume",
+    "aspect-ratio"
+].forEach(id => {
+
+    document
+        .getElementById(id)
+        .addEventListener(
+            "change",
+            updateFinalVideoSettings
+        );
+
+});
+
+updateFinalVideoSettings();
+
+
+/* ============================================================
+GENERATE STORY
+============================================================ */
+async function generateStory() {
+    console.log("🔥 GENERATE STORY BUTTON CLICKED");
+    hideError();
+
+    const prompt =
+        document.getElementById("story-prompt").value.trim();
+
+    const characterAnchor =
+        document.getElementById("character-anchor").value.trim();
+
+    const sceneCount =
+        Number(document.getElementById("scene-count").value);
+
+    const storyLength =
+        Number(document.getElementById("story-length").value);
+
+    const aspectRatio =
+        document.getElementById("aspect-ratio").value;
+
+    const voiceProfile =
+        document.getElementById("voice-profile").value;
+
+    const videoSettings =
+        getVideoSettings();
+
+    if (!prompt) {
+        showError("Enter a story idea first.");
+        return;
+    }
+
+    if (!sceneCount || sceneCount < 1) {
+        showError("Please select a valid number of scenes.");
+        return;
+    }
+
+    if (!storyLength || storyLength <= 0) {
+        showError("Please select a valid story length.");
+        return;
+    }
+
+    /*
+     * MASTER VIDEO TIMELINE
+     *
+     * Example:
+     * 1 minute + 8 scenes
+     * 60 / 8 = 7.5 seconds per scene
+     */
+    const totalDurationSeconds =
+        storyLength * 60;
+
+    const sceneDuration =
+        totalDurationSeconds / sceneCount;
+
+    const button =
+        document.getElementById("generate-story-button");
+
+    button.disabled = true;
+
+    button.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+    try {
+
+        showStatus(
+            `Creating your ${storyLength}-minute story with ${sceneCount} scenes...`
+        );
+        console.log("🚀 Calling story API:", `${API_BASE}/stories/generate`);
+        const response =
+            await fetch(`${API_BASE}/stories/generate`, {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    prompt,
+
+                    characterAnchor,
+
+                    sceneCount,
+
+                    storyLength,
+
+                    /*
+                     * IMPORTANT:
+                     * This is calculated from the user's
+                     * website selections.
+                     */
+                    totalDurationSeconds,
+
+                    sceneDuration,
+
+                    aspectRatio,
+
+                    voiceProfile,
+
+                    subtitles:
+                        videoSettings.subtitles,
+
+                    backgroundMusic:
+                        videoSettings.backgroundMusic,
+
+                    musicVolume:
+                        videoSettings.musicVolume
+                })
+            });
+
+        const data =
+            await response.json();
+            console.log("✅ Story API response:", data);
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message ||
+                "Story generation failed."
+            );
+        }
+
+        currentStory =
+            data.story;
+
+        currentStory.settings =
+            currentStory.settings || {};
+
+        /*
+         * SAVE THE USER'S WEBSITE SETTINGS
+         */
+
+        currentStory.settings.storyLength =
+            storyLength;
+
+        currentStory.settings.totalDurationSeconds =
+            totalDurationSeconds;
+
+        currentStory.settings.sceneCount =
+            sceneCount;
+
+        currentStory.settings.sceneDuration =
+            sceneDuration;
+
+        currentStory.settings.aspectRatio =
+            aspectRatio;
+
+        currentStory.settings.voiceProfile =
+            voiceProfile;
+
+        currentStory.settings.subtitles =
+            videoSettings.subtitles;
+
+        currentStory.settings.backgroundMusic =
+            videoSettings.backgroundMusic;
+
+        currentStory.settings.musicVolume =
+            videoSettings.musicVolume;
+
+        displayStory(
+            currentStory
+        );
+
+        await generateAllImages();
+
+    } catch (error) {
+
+        hideStatus();
+
+        console.error(
+            "STORY ERROR:",
+            error
+        );
+
+        showError(
+            error.message ||
+            "Story generation failed."
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+    }
+}
+
+/* ============================================================
+DISPLAY STORY
+============================================================ */
+
+function displayStory(story) {
+
+    document
+        .getElementById("story-result")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("story-title")
+        .textContent =
+            story.title ||
+            "Untitled Story";
+
+
+    document
+        .getElementById("story-concept")
+        .textContent =
+            story.concept ||
+            "";
+
+
+    document
+        .getElementById("scene-count-label")
+        .textContent =
+            `${story.scenes.length} Scenes`;
+
+
+    displayCharacters(
+        story.characters || []
+    );
+
+
+    displayScenes(
+        story.scenes || []
+    );
+
+
+    updateFinalVideoSettings();
+
+}
+
+
+/* ============================================================
+CHARACTERS
+============================================================ */
+
+function displayCharacters(characters) {
+
+    const container =
+        document.getElementById("characters");
+
+    container.innerHTML = "";
+
+
+    if (!characters.length) {
+
+        container.innerHTML = `
+            <p class="text-slate-500">
+                No characters returned.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    characters.forEach(character => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "rounded-2xl bg-black/20 border border-white/10 p-5";
+
+
+        card.innerHTML = `
+
+            <h3 class="font-bold text-lg">
+                ${escapeHTML(character.name)}
+            </h3>
+
+            <p class="text-xs text-violet-300 mt-1">
+                ${escapeHTML(character.role)}
+            </p>
+
+            <p class="text-sm text-slate-400 mt-3 leading-relaxed">
+                ${escapeHTML(character.description)}
+            </p>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* ============================================================
+DISPLAY SCENES
+============================================================ */
+
+function displayScenes(scenes) {
+
+    const container =
+        document.getElementById("scenes");
+
+    container.innerHTML = "";
+
+
+    scenes.forEach(scene => {
+
+        const card =
+            document.createElement("article");
+
+
+        card.className =
+            "scene-card rounded-3xl overflow-hidden";
+
+
+        card.innerHTML = `
+
+            <div class="p-5 md:p-6">
+
+                <div class="flex justify-between items-center mb-5">
+
+                    <div>
+
+                        <p class="text-xs uppercase tracking-widest text-violet-300">
+                            ${escapeHTML(scene.phase)}
+                        </p>
+
+                        <h3 class="font-story text-2xl font-black">
+                            ${scene.sceneNumber}.
+                            ${escapeHTML(scene.title)}
+                        </h3>
+
+                    </div>
+
+                    <span class="glass px-3 py-2 rounded-full text-sm">
+                        ${Number(scene.duration) || 5}s
+                    </span>
+
+                </div>
+
+
+                <div class="mb-5">
+
+                    <h4 class="font-bold mb-2">
+                        🎙️ Narration
+                    </h4>
+
+                    <div class="rounded-2xl bg-black/20 p-4 text-slate-300 leading-relaxed">
+                        ${escapeHTML(scene.narration)}
+                    </div>
+
+                </div>
+
+
+                <div class="mb-5">
+
+                    <h4 class="font-bold mb-2">
+                        🖼️ Image Prompt
+                    </h4>
+
+                    <div class="rounded-2xl bg-black/20 p-4 text-sm text-slate-400 leading-relaxed">
+                        ${escapeHTML(scene.imagePrompt)}
+                    </div>
+
+                </div>
+
+
+                <h4 class="font-bold mb-2">
+                    🖼️ Scene Image
+                </h4>
+
+
+                <div
+                    id="image-${scene.sceneNumber}"
+                    class="rounded-2xl overflow-hidden bg-black/30 aspect-video flex items-center justify-center"
+                >
+
+                    <div class="text-center text-slate-500">
+
+                        <div class="spinner mx-auto mb-3"></div>
+
+                        <p class="text-sm">
+                            Generating image...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-6">
+
+                    <h4 class="font-bold mb-2">
+                        🎙️ Scene Narration Audio
+                    </h4>
+
+                    <div
+                        id="audio-${scene.sceneNumber}"
+                        class="rounded-2xl bg-black/20 p-4"
+                    >
+
+                        <div class="text-sm text-slate-500">
+                            Voice not generated yet.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-6">
+
+                    <h4 class="font-bold mb-2">
+                        🎬 AI Video
+                    </h4>
+
+                    <div
+                        id="video-${scene.sceneNumber}"
+                        class="rounded-2xl overflow-hidden bg-black/30 aspect-video flex items-center justify-center"
+                    >
+
+                        <div class="text-center text-slate-500">
+
+                            <p class="text-sm">
+                                Video not generated yet
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* ============================================================
+GENERATE ALL IMAGES
+============================================================ */
+
+async function generateAllImages() {
+
+    if (
+        !currentStory ||
+        !currentStory.scenes
+    ) {
+        return;
+    }
+
+
+    for (
+        let i = 0;
+        i < currentStory.scenes.length;
+        i++
+    ) {
+
+        const scene =
+            currentStory.scenes[i];
+
+
+        showStatus(
+            `Generating image ${i + 1} of ${currentStory.scenes.length}...`
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE}/images/generate`,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            storyId:
+                                currentStory.id,
+
+                            sceneNumber:
+                                scene.sceneNumber,
+
+                            prompt:
+                                scene.imagePrompt,
+
+                            aspectRatio:
+                                currentStory.settings
+                                    .aspectRatio
+
+                        })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok ||
+                !data.success) {
+
+                throw new Error(
+                    data.message ||
+                    "Image generation failed."
+                );
+
+            }
+
+
+            scene.imageURL =
+                data.imageURL;
+
+            scene.imageFileURL =
+                data.savedFile;
+
+
+            const imageContainer =
+                document.getElementById(
+                    `image-${scene.sceneNumber}`
+                );
+
+
+            imageContainer.innerHTML = `
+
+                <img
+                    src="${escapeHTML(data.imageURL)}"
+                    class="w-full h-auto block"
+                    alt="Scene ${scene.sceneNumber}"
+                >
+
+            `;
+
+
+        } catch (error) {
+
+            console.error(
+                `IMAGE SCENE ${scene.sceneNumber}:`,
+                error
+            );
+
+
+            const imageContainer =
+                document.getElementById(
+                    `image-${scene.sceneNumber}`
+                );
+
+
+            imageContainer.innerHTML = `
+
+                <div class="p-8 text-center text-red-300">
+
+                    ⚠️ Image generation failed
+
+                    <p class="text-xs mt-2 text-slate-500">
+                        ${escapeHTML(error.message)}
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    hideStatus();
+
+}
+
+
+/* ============================================================
+GENERATE AUDIO
+============================================================ */
+
+async function generateAllAudio() {
+
+    if (
+        !currentStory ||
+        !currentStory.scenes
+    ) {
+
+        showError(
+            "Generate a story first."
+        );
+
+        return;
+
+    }
+
+
+    hideError();
+
+
+    const button =
+        document.getElementById(
+            "generate-audio-button"
+        );
+
+
+    button.disabled = true;
+
+    button.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+
+    let completed = 0;
+
+
+    const voice =
+        document.getElementById(
+            "voice-profile"
+        ).value;
+
+
+    try {
+
+        for (
+            let i = 0;
+            i < currentStory.scenes.length;
+            i++
+        ) {
+
+            const scene =
+                currentStory.scenes[i];
+
+
+            showStatus(
+                `Generating narration ${i + 1} of ${currentStory.scenes.length}...`
+            );
+
+
+            const audioContainer =
+                document.getElementById(
+                    `audio-${scene.sceneNumber}`
+                );
+
+
+            audioContainer.innerHTML = `
+
+                <div class="flex items-center gap-3">
+
+                    <div class="spinner"></div>
+
+                    <div>
+
+                        <p class="text-sm text-slate-300">
+                            Generating AI voice...
+                        </p>
+
+                        <p class="text-xs text-slate-500 mt-1">
+                            Please wait...
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/audio/generate`,
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                storyId:
+                                    currentStory.id,
+
+                                sceneNumber:
+                                    scene.sceneNumber,
+
+                                narration:
+                                    scene.narration,
+
+                                voice
+
+                            })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok ||
+                    !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "Voice generation failed."
+                    );
+
+                }
+
+
+                scene.audioURL =
+                    data.audioURL;
+
+                scene.audioStatus =
+                    "completed";
+
+
+                audioContainer.innerHTML = `
+
+                    <audio
+                        controls
+                        preload="metadata"
+                    >
+
+                        <source
+                            src="${escapeHTML(data.audioURL)}"
+                            type="audio/mpeg"
+                        >
+
+                        Your browser does not support audio playback.
+
+                    </audio>
+
+
+                    <div class="mt-3">
+
+                        <p class="text-sm text-emerald-300 font-semibold">
+                            ✅ Narration generated
+                        </p>
+
+                        <p class="text-xs text-slate-500 mt-1">
+                            Voice: ${escapeHTML(data.voice || voice)}
+                        </p>
+
+                    </div>
+
+                `;
+
+
+                completed++;
+
+
+            } catch (error) {
+
+                console.error(
+                    `AUDIO SCENE ${scene.sceneNumber} ERROR:`,
+                    error
+                );
+
+
+                scene.audioStatus =
+                    "failed";
+
+
+                audioContainer.innerHTML = `
+
+                    <div class="text-red-300">
+
+                        ⚠️ Voice generation failed
+
+                        <p class="text-xs mt-2 text-slate-500 break-words">
+                            ${escapeHTML(error.message)}
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        hideStatus();
+
+
+        const summary =
+            document.getElementById(
+                "voice-summary"
+            );
+
+
+        summary.classList.remove("hidden");
+
+
+        summary.innerHTML = `
+
+            <div class="rounded-2xl bg-pink-500/10 border border-pink-500/20 p-5">
+
+                <h3 class="font-bold text-lg">
+                    🎙️ Voice Generation Finished
+                </h3>
+
+                <p class="text-sm text-slate-400 mt-2">
+
+                    ${completed}
+                    of
+                    ${currentStory.scenes.length}
+                    scene narrations generated.
+
+                </p>
+
+                ${
+                    completed === currentStory.scenes.length
+
+                        ? `
+                            <p class="text-sm text-emerald-300 mt-3">
+                                ✅ All narration audio files are ready.
+                            </p>
+                        `
+
+                        : `
+                            <p class="text-sm text-yellow-300 mt-3">
+                                ⚠️ Some narration files failed.
+                            </p>
+                        `
+                }
+
+            </div>
+
+        `;
+
+
+    } catch (error) {
+
+        console.error(
+            "GENERATE ALL AUDIO ERROR:",
+            error
+        );
+
+
+        showError(
+            error.message ||
+            "Voice generation process failed."
+        );
+
+
+    } finally {
+
+        hideStatus();
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+GENERATE AI VIDEOS
+============================================================ */
+
+async function generateAllVideos() {
+
+    if (!currentStory) {
+
+        showError(
+            "Generate a story first."
+        );
+
+        return;
+
+    }
+
+
+    hideError();
+
+
+    const button =
+        document.getElementById(
+            "generate-videos-button"
+        );
+
+
+    button.disabled = true;
+
+    button.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+
+    let completed = 0;
+
+
+    try {
+
+        for (
+            let i = 0;
+            i < currentStory.scenes.length;
+            i++
+        ) {
+
+            const scene =
+                currentStory.scenes[i];
+
+
+            showStatus(
+                `Creating video ${i + 1} of ${currentStory.scenes.length}...`
+            );
+
+
+            const videoContainer =
+                document.getElementById(
+                    `video-${scene.sceneNumber}`
+                );
+
+
+            videoContainer.innerHTML = `
+
+                <div class="text-center">
+
+                    <div class="spinner mx-auto mb-4"></div>
+
+                    <p class="text-sm text-slate-300">
+                        Generating AI video...
+                    </p>
+
+                </div>
+
+            `;
+
+
+            try {
+
+                const response =
+    await fetch(
+        `${API_BASE}/videos/generate`,
+        {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body: JSON.stringify({
+
+                storyId:
+                    currentStory.id,
+
+                sceneNumber:
+                    scene.sceneNumber,
+
+                videoPrompt:
+                    scene.videoPrompt ||
+                    scene.imagePrompt ||
+                    scene.narration,
+
+                imageFileURL:
+                    scene.imageFileURL ||
+                    scene.imageURL,
+
+                imageURL:
+                    scene.imageURL ||
+                    scene.imageFileURL,
+
+                duration:
+                    Number(scene.duration) || 5,
+
+                aspectRatio:
+                    currentStory.settings?.aspectRatio ||
+                    "16:9"
+
+            })
+
+        }
+    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok ||
+                    !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "Video generation failed."
+                    );
+
+                }
+
+
+                scene.videoURL =
+                    data.videoURL;
+
+                scene.videoStatus =
+                    "completed";
+
+
+                videoContainer.innerHTML = `
+
+                    <video
+                        controls
+                        preload="metadata"
+                        class="w-full h-auto block"
+                    >
+
+                        <source
+                            src="${escapeHTML(data.videoURL)}"
+                            type="video/mp4"
+                        >
+
+                    </video>
+
+                    <div class="p-3 bg-black/30">
+
+                        <p class="text-sm text-emerald-300 font-semibold">
+                            ✅ Scene video generated
+                        </p>
+
+                    </div>
+
+                `;
+
+
+                completed++;
+
+
+            } catch (error) {
+
+                console.error(
+                    `VIDEO SCENE ${scene.sceneNumber}:`,
+                    error
+                );
+
+
+                scene.videoStatus =
+                    "failed";
+
+
+                videoContainer.innerHTML = `
+
+                    <div class="p-8 text-center text-red-300">
+
+                        ⚠️ Video generation failed
+
+                        <p class="text-xs mt-3 text-slate-500 break-words">
+                            ${escapeHTML(error.message)}
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        hideStatus();
+
+
+        document
+            .getElementById("video-summary")
+            .classList.remove("hidden");
+
+
+        document
+            .getElementById("video-list")
+            .innerHTML = `
+
+                <div class="md:col-span-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-5">
+
+                    <h3 class="font-bold text-lg">
+                        🎉 Video Generation Finished
+                    </h3>
+
+                    <p class="text-sm text-slate-400 mt-2">
+
+                        ${completed}
+                        of
+                        ${currentStory.scenes.length}
+                        scene videos generated.
+
+                    </p>
+
+                    ${
+                        completed === currentStory.scenes.length
+
+                            ? `
+                                <p class="text-sm text-emerald-300 mt-3">
+                                    ✅ All scene MP4 files are ready.
+                                </p>
+                            `
+
+                            : `
+                                <p class="text-sm text-yellow-300 mt-3">
+                                    ⚠️ Some scenes failed because Pollinations video generation may require balance.
+                                </p>
+                            `
+                    }
+
+                </div>
+
+            `;
+
+
+    } catch (error) {
+
+        console.error(
+            "GENERATE ALL VIDEOS ERROR:",
+            error
+        );
+
+        showError(
+            error.message ||
+            "Video generation process failed."
+        );
+
+    } finally {
+
+        hideStatus();
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+FINAL MP4
+============================================================ */
+
+async function generateFinalVideo() {
+
+    if (!currentStory) {
+        showError("Generate a story first.");
+        return;
+    }
+
+    hideError();
+
+    const button =
+        document.getElementById(
+            "generate-final-video-button"
+        );
+
+    button.disabled = true;
+
+    button.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+    try {
+
+        showStatus(
+            "Rendering your final WonderTale MP4..."
+        );
+
+        const scenes =
+            currentStory.scenes || [];
+
+        if (!scenes.length) {
+            throw new Error(
+                "No scenes available."
+            );
+        }
+
+        /*
+         * --------------------------------------------------
+         * VALIDATE IMAGES
+         * --------------------------------------------------
+         */
+
+        const missingImages =
+            scenes.filter(
+                scene => !scene.imageFileURL
+            );
+
+        if (missingImages.length) {
+
+            throw new Error(
+                `Images are missing for ${missingImages.length} scene(s). Please generate all images first.`
+            );
+
+        }
+
+        /*
+         * --------------------------------------------------
+         * VALIDATE AUDIO
+         * --------------------------------------------------
+         */
+
+        const missingAudio =
+            scenes.filter(
+                scene => !scene.audioURL
+            );
+
+        if (missingAudio.length) {
+
+            throw new Error(
+                `Narration audio is missing for ${missingAudio.length} scene(s). Please generate all narration first.`
+            );
+
+        }
+
+        /*
+         * --------------------------------------------------
+         * MASTER VIDEO TIMELINE
+         * --------------------------------------------------
+         */
+
+        const storyLength =
+            Number(
+                currentStory.settings?.storyLength ||
+                document.getElementById(
+                    "story-length"
+                ).value
+            );
+
+        const sceneCount =
+            Number(
+                currentStory.settings?.sceneCount ||
+                scenes.length
+            );
+
+        const totalDurationSeconds =
+            storyLength * 60;
+
+        const sceneDuration =
+            totalDurationSeconds /
+            sceneCount;
+
+        /*
+         * --------------------------------------------------
+         * CURRENT VIDEO SETTINGS
+         * --------------------------------------------------
+         */
+
+        const settings =
+            getVideoSettings();
+
+        /*
+         * --------------------------------------------------
+         * SEND TO SERVER
+         * --------------------------------------------------
+         */
+
+        const response =
+            await fetch(
+                `${API_BASE}/video/render`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        storyId:
+                            currentStory.id,
+
+                        title:
+                            currentStory.title ||
+                            "WonderTale AI Story",
+
+                        storyLength,
+
+                        totalDurationSeconds,
+
+                        sceneCount,
+
+                        sceneDuration,
+
+                        aspectRatio:
+                            settings.aspectRatio,
+
+                        subtitles:
+                            settings.subtitles,
+
+                        backgroundMusic:
+                            settings.backgroundMusic,
+
+                        musicVolume:
+                            settings.musicVolume,
+
+                        scenes:
+                            scenes.map(
+                                (scene, index) => ({
+
+                                    sceneNumber:
+                                        index + 1,
+
+                                    narration:
+                                        scene.narration || "",
+
+                                    imageFileURL:
+                                        scene.imageFileURL,
+
+                                    audioURL:
+                                        scene.audioURL,
+
+                                    duration:
+                                        sceneDuration
+
+                                })
+                            )
+
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Final video rendering failed."
+            );
+
+        }
+
+        console.log(
+            "FINAL VIDEO CREATED:",
+            data
+        );
+
+        /*
+         * --------------------------------------------------
+         * SAVE FINAL VIDEO INFORMATION
+         * --------------------------------------------------
+         */
+
+        currentStory.finalVideoURL =
+            data.videoURL;
+        document.getElementById(
+    "youtubeTitle"
+).value =
+    currentStory.title ||
+    "WonderTale AI Story";
+
+document.getElementById(
+    "youtubeDescription"
+).value =
+    `${currentStory.concept || ""}
+
+Created with WonderTale AI Studio.
+
+#WonderTaleAI #AIStory #KidsStories #FairyTale`;
+        currentStory.finalVideoPath =
+            data.videoPath ||
+            data.savedFile ||
+            null;
+
+        /*
+         * --------------------------------------------------
+         * SHOW FINAL VIDEO
+         * --------------------------------------------------
+         */
+
+        const videoContainer =
+            document.getElementById(
+                "finalVideoContainer"
+            );
+
+        const videoPlayer =
+            document.getElementById(
+                "finalVideoPlayer"
+            );
+
+        const downloadLink =
+            document.getElementById(
+                "finalVideoDownload"
+            );
+
+        if (!data.videoURL) {
+
+            throw new Error(
+                "Video was created but the server did not return a video URL."
+            );
+
+        }
+
+        videoPlayer.src =
+            data.videoURL;
+
+        videoPlayer.load();
+
+        downloadLink.href =
+            data.videoURL;
+
+        videoContainer.classList.remove(
+            "hidden"
+        );
+
+        /*
+         * --------------------------------------------------
+         * UPDATE STATUS
+         * --------------------------------------------------
+         */
+
+        const finalStatus =
+            document.getElementById(
+                "finalVideoStatus"
+            );
+
+        finalStatus.innerHTML = `
+
+            <div class="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-5">
+
+                <p class="text-emerald-300 font-semibold">
+                    ✅ Final MP4 created successfully
+                </p>
+
+                <p class="text-slate-400 text-sm mt-2">
+                    Duration: ${Math.round(totalDurationSeconds)} seconds
+                    · ${sceneCount} scenes
+                </p>
+
+            </div>
+
+        `;
+
+        hideStatus();
+
+        /*
+         * --------------------------------------------------
+         * LOAD YOUTUBE SECTION
+         * --------------------------------------------------
+         */
+
+        document
+            .getElementById(
+                "youtube-publish-section"
+            )
+            .scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        /*
+         * --------------------------------------------------
+         * REFRESH LIBRARY
+         * --------------------------------------------------
+         */
+
+        await loadVideoLibrary();
+
+    } catch (error) {
+
+        hideStatus();
+
+        console.error(
+            "FINAL VIDEO ERROR:",
+            error
+        );
+
+        showError(
+            error.message ||
+            "Final video rendering failed."
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+
+    }
+}
+/* ============================================================
+VIDEO CARD
+============================================================ */
+function createVideoCard(video) {
+
+    const card = document.createElement("div");
+
+    card.className =
+        "overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl";
+
+    const createdDate =
+        video.createdAt
+            ? new Date(video.createdAt).toLocaleString()
+            : "Unknown date";
+
+    const fileSize =
+        formatFileSize(video.fileSize || 0);
+
+    const thumbnail =
+        video.thumbnailURL || "";
+
+    card.innerHTML = `
+
+        <div class="aspect-video bg-black/40 overflow-hidden">
+
+            ${
+                thumbnail
+                    ? `
+                        <img
+                            src="${escapeHTML(thumbnail)}"
+                            alt="${escapeHTML(video.title || "WonderTale Video")}"
+                            class="w-full h-full object-cover"
+                        >
+                    `
+                    : `
+                        <div class="w-full h-full flex items-center justify-center text-5xl">
+                            🎬
+                        </div>
+                    `
+            }
+
+        </div>
+
+        <div class="p-5">
+
+            <h3 class="font-story text-xl font-black">
+                ${escapeHTML(video.title || "Untitled Video")}
+            </h3>
+
+            <p class="text-xs text-slate-500 mt-2">
+                ${escapeHTML(createdDate)}
+            </p>
+
+            <p class="text-xs text-slate-500 mt-1">
+                ${escapeHTML(fileSize)}
+                ·
+                ${Number(video.sceneCount || 0)} scenes
+            </p>
+
+            <div class="flex gap-3 mt-5">
+
+                <a
+                    href="${escapeHTML(video.videoURL || "#")}"
+                    target="_blank"
+                    class="flex-1 text-center px-4 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 font-semibold"
+                >
+                    ▶ Watch
+                </a>
+
+                <a
+                    href="${escapeHTML(video.videoURL || "#")}"
+                    target="_blank"
+                    download
+                    class="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 font-semibold"
+                    title="Download video"
+                >
+                    ⬇️
+                </a>
+
+            </div>
+
+            <button
+                type="button"
+                class="youtube-library-publish-btn w-full mt-3 px-4 py-3 rounded-xl bg-red-600 hover:bg-red-500 font-semibold transition"
+            >
+                📤 Publish to YouTube
+            </button>
+
+        </div>
+
+    `;
+
+
+    /*
+     * YOUTUBE PUBLISH BUTTON
+     */
+
+    const publishButton =
+        card.querySelector(
+            ".youtube-library-publish-btn"
+        );
+
+
+    publishButton.addEventListener(
+        "click",
+        async () => {
+
+            /*
+             * CHECK YOUTUBE CONNECTION
+             */
+
+            if (!youtubeConnected) {
+
+                showError(
+                    "Connect your YouTube account before publishing."
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * CHECK VIDEO FILE
+             */
+
+            if (!video.videoURL) {
+
+                showError(
+                    "Video file is not available."
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * EXTRACT FILE NAME
+             *
+             * Example:
+             *
+             * /generated/videos/story-123-final.mp4
+             *
+             * becomes:
+             *
+             * story-123-final.mp4
+             */
+
+            const videoFileName =
+                video.videoURL
+                    .split("/")
+                    .pop();
+
+
+            if (!videoFileName) {
+
+                showError(
+                    "Could not determine video filename."
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * ASK FOR YOUTUBE TITLE
+             */
+
+            const youtubeTitle =
+                prompt(
+                    "Enter YouTube video title:",
+                    video.title || "WonderTale AI Story"
+                );
+
+
+            if (!youtubeTitle) {
+
+                return;
+
+            }
+
+
+            /*
+             * OPTIONAL DESCRIPTION
+             */
+
+            const youtubeDescription =
+                prompt(
+                    "Enter YouTube description:",
+                    `Enjoy this magical story created with WonderTale AI!`
+                ) || "";
+
+
+            /*
+             * DEFAULT PRIVACY
+             */
+
+            const privacyStatus =
+                "private";
+
+
+            publishButton.disabled = true;
+
+            publishButton.classList.add(
+                "opacity-50",
+                "cursor-not-allowed"
+            );
+
+            publishButton.textContent =
+                "⏳ Uploading...";
+
+
+            try {
+
+                console.log(
+                    "📤 Publishing library video:",
+                    videoFileName
+                );
+
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/youtube/upload`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                storyId:
+                                    video.id,
+
+                                videoFileName,
+
+                                title:
+                                    youtubeTitle,
+
+                                description:
+                                    youtubeDescription,
+
+                                tags: [
+                                    "WonderTale AI",
+                                    "AI Story",
+                                    "Kids Story",
+                                    "Fairy Tale",
+                                    "AI Generated Story"
+                                ],
+
+                                privacyStatus
+
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        "YouTube upload failed."
+                    );
+
+                }
+
+
+                /*
+                 * SUCCESS
+                 */
+
+                console.log(
+                    "✅ YouTube upload successful:",
+                    data
+                );
+
+
+                publishButton.textContent =
+                    "✅ Published to YouTube";
+
+
+                publishButton.classList.remove(
+                    "bg-red-600",
+                    "hover:bg-red-500"
+                );
+
+                publishButton.classList.add(
+                    "bg-green-600"
+                );
+
+
+                /*
+                 * SHOW YOUTUBE LINK
+                 */
+
+                if (data.videoURL) {
+
+                    const youtubeLink =
+                        document.createElement("a");
+
+                    youtubeLink.href =
+                        data.videoURL;
+
+                    youtubeLink.target =
+                        "_blank";
+
+                    youtubeLink.rel =
+                        "noopener noreferrer";
+
+                    youtubeLink.className =
+                        "block text-center mt-2 text-sm text-red-300 hover:text-red-200";
+
+                    youtubeLink.textContent =
+                        "🔗 View on YouTube";
+
+                    card
+                        .querySelector(".p-5")
+                        .appendChild(
+                            youtubeLink
+                        );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "LIBRARY YOUTUBE UPLOAD ERROR:",
+                    error
+                );
+
+
+                publishButton.disabled =
+                    false;
+
+                publishButton.classList.remove(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+                publishButton.textContent =
+                    "📤 Publish to YouTube";
+
+
+                showError(
+                    error.message ||
+                    "YouTube upload failed."
+                );
+
+            }
+
+        }
+    );
+
+
+    return card;
+
+}
+function formatFileSize(bytes) {
+
+    if (!bytes) {
+        return "0 MB";
+    }
+
+    const mb =
+        bytes / (1024 * 1024);
+
+    if (mb < 1) {
+        return `${Math.round(bytes / 1024)} KB`;
+    }
+
+    return `${mb.toFixed(2)} MB`;
+}
+/* ============================================================
+YOUTUBE CONNECTION
+============================================================ */
+
+async function checkYouTubeConnection() {
+
+    const status =
+        document.getElementById(
+            "youtubeConnectionStatus"
+        );
+
+    const accountBox =
+        document.getElementById(
+            "youtubeAccountBox"
+        );
+
+    const notConnected =
+        document.getElementById(
+            "youtubeNotConnected"
+        );
+
+    const publishForm =
+        document.getElementById(
+            "youtubePublishForm"
+        );
+
+    try {
+
+        status.textContent =
+            "Checking YouTube...";
+
+        status.className =
+            "px-3 py-2 rounded-full text-sm font-semibold bg-white/10 text-slate-300";
+
+        const response =
+            await fetch(
+                `${API_BASE}/youtube/status`
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Could not check YouTube connection."
+            );
+
+        }
+
+        youtubeConnected =
+            Boolean(
+                data.connected
+            );
+
+        youtubeChannel =
+            data.channel ||
+            null;
+
+        if (youtubeConnected) {
+
+            status.textContent =
+                "● YouTube Connected";
+
+            status.className =
+                "px-3 py-2 rounded-full text-sm font-semibold bg-emerald-500/10 text-emerald-300";
+
+            notConnected.classList.add(
+                "hidden"
+            );
+
+            publishForm.classList.remove(
+                "hidden"
+            );
+
+            /*
+             * Show channel information
+             */
+
+            if (youtubeChannel) {
+
+                accountBox.classList.remove(
+                    "hidden"
+                );
+
+                document.getElementById(
+                    "youtubeChannelName"
+                ).textContent =
+                    youtubeChannel.title ||
+                    youtubeChannel.name ||
+                    "Connected Channel";
+
+                if (
+                    youtubeChannel.thumbnail
+                ) {
+
+                    document.getElementById(
+                        "youtubeChannelThumbnail"
+                    ).src =
+                        youtubeChannel.thumbnail;
+
+                }
+
+            }
+
+        } else {
+
+            status.textContent =
+                "● YouTube Not Connected";
+
+            status.className =
+                "px-3 py-2 rounded-full text-sm font-semibold bg-red-500/10 text-red-300";
+
+            accountBox.classList.add(
+                "hidden"
+            );
+
+            publishForm.classList.add(
+                "hidden"
+            );
+
+            notConnected.classList.remove(
+                "hidden"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "YOUTUBE STATUS ERROR:",
+            error
+        );
+
+        youtubeConnected =
+            false;
+
+        status.textContent =
+            "● YouTube Not Connected";
+
+        status.className =
+            "px-3 py-2 rounded-full text-sm font-semibold bg-red-500/10 text-red-300";
+
+        accountBox.classList.add(
+            "hidden"
+        );
+
+        publishForm.classList.add(
+            "hidden"
+        );
+
+        notConnected.classList.remove(
+            "hidden"
+        );
+
+    }
+
+}
+async function connectYouTube() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/youtube/auth`
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success ||
+            !data.authUrl
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Could not start YouTube connection."
+            );
+
+        }
+
+        window.location.href =
+            data.authUrl;
+
+    } catch (error) {
+
+        console.error(
+            "YOUTUBE CONNECT ERROR:",
+            error
+        );
+
+        showError(
+            error.message ||
+            "Could not connect YouTube."
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+PUBLISH TO YOUTUBE
+============================================================ */
+
+async function publishToYouTube() {
+
+    hideError();
+
+    if (!youtubeConnected) {
+
+        showError(
+            "Connect your YouTube account before publishing."
+        );
+
+        return;
+
+    }
+
+    if (
+        !currentStory ||
+        !currentStory.finalVideoURL
+    ) {
+
+        showError(
+            "Generate the final MP4 before publishing to YouTube."
+        );
+
+        return;
+
+    }
+
+    const button =
+        document.getElementById(
+            "youtubePublishButton"
+        );
+
+    const status =
+        document.getElementById(
+            "youtubeUploadStatus"
+        );
+
+    const successBox =
+        document.getElementById(
+            "youtubeUploadSuccess"
+        );
+
+    const title =
+        document.getElementById(
+            "youtubeTitle"
+        ).value.trim();
+
+    const description =
+        document.getElementById(
+            "youtubeDescription"
+        ).value.trim();
+
+    const tagsText =
+        document.getElementById(
+            "youtubeTags"
+        ).value.trim();
+
+    const privacyStatus =
+        document.getElementById(
+            "youtubePrivacy"
+        ).value;
+
+    if (!title) {
+
+        showError(
+            "Enter a YouTube title."
+        );
+
+        return;
+
+    }
+
+    /*
+     * GET FINAL VIDEO FILE NAME
+     *
+     * Example:
+     * /generated/videos/story-1791100274872-final.mp4
+     *
+     * becomes:
+     * story-1791100274872-final.mp4
+     */
+
+    const videoFileName =
+        currentStory.finalVideoURL
+            .split("/")
+            .pop();
+
+    if (!videoFileName) {
+
+        showError(
+            "Final video filename could not be determined."
+        );
+
+        return;
+
+    }
+
+    console.log(
+        "🎬 YouTube video file:",
+        videoFileName
+    );
+
+    const tags =
+        tagsText
+            ? tagsText
+                .split(",")
+                .map(tag => tag.trim())
+                .filter(Boolean)
+            : [];
+
+    button.disabled = true;
+
+    button.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+    );
+
+    successBox.classList.add(
+        "hidden"
+    );
+
+    status.textContent =
+        "Uploading your WonderTale video to YouTube...";
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/youtube/upload`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        storyId:
+                            currentStory.id,
+
+                        videoFileName,
+
+                        title,
+
+                        description,
+
+                        tags,
+
+                        privacyStatus
+
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "YouTube upload failed."
+            );
+
+        }
+
+        /*
+         * SAVE YOUTUBE INFORMATION
+         */
+
+        currentStory.youtubeVideoId =
+            data.videoId;
+
+        currentStory.youtubeVideoURL =
+            data.videoURL;
+
+        /*
+         * SUCCESS UI
+         */
+
+        status.textContent =
+            "✅ Video uploaded successfully.";
+
+        successBox.classList.remove(
+            "hidden"
+        );
+
+        document.getElementById(
+            "youtubeVideoLink"
+        ).href =
+            data.videoURL;
+
+        /*
+         * REFRESH LIBRARY
+         */
+
+        await loadVideoLibrary();
+
+    } catch (error) {
+
+        console.error(
+            "YOUTUBE UPLOAD ERROR:",
+            error
+        );
+
+        status.textContent =
+            "❌ YouTube upload failed.";
+
+        showError(
+            error.message ||
+            "YouTube upload failed."
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "opacity-50",
+            "cursor-not-allowed"
+        );
+
+    }
+
+}
+/* ============================================================
+VIDEO LIBRARY
+============================================================ */
+
+async function loadVideoLibrary() {
+
+    const loading =
+        document.getElementById("library-loading");
+
+    const empty =
+        document.getElementById("library-empty");
+
+    const grid =
+        document.getElementById("video-library-grid");
+
+    if (!loading || !empty || !grid) {
+        console.error(
+            "VIDEO LIBRARY ELEMENTS NOT FOUND"
+        );
+        return;
+    }
+
+    try {
+
+        loading.classList.remove("hidden");
+
+        empty.classList.add("hidden");
+
+        grid.innerHTML = "";
+
+        console.log(
+            "📚 Loading video library..."
+        );
+
+        const response =
+            await fetch(
+                `${API_BASE}/library`
+            );
+
+        const data =
+            await response.json();
+
+        console.log(
+            "📚 Video library response:",
+            data
+        );
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Could not load video library."
+            );
+
+        }
+
+        /*
+         * Support common backend response formats:
+         *
+         * data.videos
+         * data.library
+         * data.data
+         */
+
+        const videos =
+            Array.isArray(data.videos)
+                ? data.videos
+                : Array.isArray(data.library)
+                    ? data.library
+                    : Array.isArray(data.data)
+                        ? data.data
+                        : [];
+
+
+        loading.classList.add(
+            "hidden"
+        );
+
+
+        if (!videos.length) {
+
+            empty.classList.remove(
+                "hidden"
+            );
+
+            return;
+
+        }
+
+
+        empty.classList.add(
+            "hidden"
+        );
+
+
+        videos.forEach(video => {
+
+            const card =
+                createVideoCard(video);
+
+            grid.appendChild(card);
+
+        });
+
+
+        console.log(
+            `✅ Loaded ${videos.length} video(s)`
+        );
+
+
+    } catch (error) {
+
+        loading.classList.add(
+            "hidden"
+        );
+
+        console.error(
+            "VIDEO LIBRARY ERROR:",
+            error
+        );
+
+
+        grid.innerHTML = `
+
+            <div class="md:col-span-2 xl:col-span-3">
+
+                <div class="rounded-2xl bg-red-500/10 border border-red-500/20 p-6">
+
+                    <p class="font-semibold text-red-300">
+                        ⚠️ Could not load video library
+                    </p>
+
+                    <p class="text-sm text-slate-400 mt-2 break-words">
+                        ${escapeHTML(error.message)}
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+}
+/* ============================================================
+INITIALIZE
+============================================================ */
+
+window.generateStory = generateStory;
+window.generateAllImages = generateAllImages;
+window.generateAllAudio = generateAllAudio;
+window.generateAllVideos = generateAllVideos;
+window.generateFinalVideo =generateFinalVideo;
+window.loadVideoLibrary = loadVideoLibrary;
+window.connectYouTube = connectYouTube;
+window.publishToYouTube = publishToYouTube;
+
+
+/* ============================================================
+START APP
+============================================================ */
+
+checkBackend();
+loadVideoLibrary();
+checkYouTubeConnection();
+
+</script>

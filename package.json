@@ -1,0 +1,15 @@
+{
+  "name": "wondertale-ai",
+  "version": "1.0.0",
+  "description": "WonderTale AI Story and Video Generation Studio",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "googleapis": "^183.0.0"
+  }
+}
