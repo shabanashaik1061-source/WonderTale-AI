@@ -285,7 +285,7 @@ YOUTUBE_REDIRECT_URI=http://localhost:3000/auth/youtube/callback
 
 ### ⚠️ Important
 
-Never upload your real `.env` file to GitHub.
+Never share  your real `.env` file to GitHub.
 
 Your API keys, tokens, client secrets, and OAuth credentials must remain private.
 
