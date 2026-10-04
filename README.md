@@ -209,8 +209,9 @@ WonderTale-AI/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/WonderTale-AI.git
+git clone https://github.com/shabanashaik1061-source/WonderTale-AI.git
 cd WonderTale-AI
+git status
 ```
 
 ---
