@@ -1,4 +1,5 @@
 const express = require("express");
+const https = require("https");
 const { google } = require("googleapis");
 const dotenv = require("dotenv");
 const path = require("path");
@@ -51,7 +52,17 @@ const app = express();
 const PORT =
   process.env.PORT || 3000;
 
+const HTTPS_KEY_PATH = path.join(
+    __dirname,
+    "..",
+    "192.168.0.114+2-key.pem"
+);
 
+const HTTPS_CERT_PATH = path.join(
+    __dirname,
+    "..",
+    "192.168.0.114+2.pem"
+);
 
 /* ============================================================
    DIRECTORIES
@@ -3764,22 +3775,49 @@ app.use(
    SERVER START
 ============================================================ */
 
-const server = app.listen(PORT,"0.0.0.0", () => {
-    console.log("\n==========================================");
-    console.log("       WONDER TALE AI STUDIO BACKEND");
-    console.log("==========================================");
-    console.log(`Server: http://localhost:${PORT}`);
-    
-    console.log("Image Model: Cloudflare FLUX");
-    console.log("Video Generation: Cloudflare + FFmpeg");
-    console.log("==========================================\n");
-    console.log("✅ SERVER IS LISTENING");
-});
+let server;
 
-server.on("close", () => {
-    console.log("❌ SERVER CLOSED");
-});
+if (
+    process.env.RENDER ||
+    process.env.NODE_ENV === "production"
+) {
 
-server.on("error", (error) => {
-    console.error("❌ SERVER ERROR:", error);
-});
+    // Render / production → normal HTTP
+    server = app.listen(PORT, "0.0.0.0", () => {
+        console.log("\n==========================================");
+        console.log("       WONDER TALE AI STUDIO BACKEND");
+        console.log("==========================================");
+        console.log(`Server: http://localhost:${PORT}`);
+
+        console.log("Image Model: Cloudflare FLUX");
+        console.log("Video Generation: Cloudflare + FFmpeg");
+        console.log("==========================================\n");
+        console.log("SERVER IS LISTENING");
+    });
+
+} else {
+
+    // Local development → HTTPS
+    const httpsOptions = {
+        key: fs.readFileSync(HTTPS_KEY_PATH),
+        cert: fs.readFileSync(HTTPS_CERT_PATH)
+    };
+
+    server = https.createServer(
+        httpsOptions,
+        app
+    );
+
+    server.listen(PORT, "0.0.0.0", () => {
+        console.log("\n==========================================");
+        console.log("       WONDER TALE AI STUDIO BACKEND");
+        console.log("==========================================");
+        console.log(`HTTPS: https://localhost:${PORT}`);
+        console.log(`PHONE: https://192.168.0.114:${PORT}`);
+
+        console.log("Image Model: Cloudflare FLUX");
+        console.log("Video Generation: Cloudflare + FFmpeg");
+        console.log("==========================================\n");
+        console.log("SERVER IS LISTENING");
+    });
+}

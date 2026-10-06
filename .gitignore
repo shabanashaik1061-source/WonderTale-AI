@@ -14,6 +14,13 @@ generated/videos/*
 generated/thumbnails/*
 generated/music/*
 
+
+# Local HTTPS / development tools
+*.pem
+*.crt
+mkcert.exe
+cloudflared.exe
+
 !generated/music/.gitkeep
 !generated/images/.gitkeep
 !generated/audio/.gitkeep

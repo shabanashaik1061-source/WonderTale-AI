@@ -13,7 +13,8 @@
     <title>WonderTale AI Studio</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap"
         rel="stylesheet"
@@ -4152,3 +4153,19 @@ loadStorageInfo();
 checkYouTubeConnection();
 
 </script>
+
+<script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/service-worker.js")
+                .then(() => {
+                    console.log("✅ WonderTale service worker registered");
+                })
+                .catch((error) => {
+                    console.error("❌ Service worker registration failed:", error);
+                });
+        });
+    }
+</script>
+</body>
+</html>
