@@ -5,6 +5,14 @@ const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
 const { renderScene } = require("./services/videoRenderer");
+const storageRoutes =
+    require("./routes/storageRoutes");
+const {
+    cleanupAfterSuccessfulRender
+} = require("./services/storageService");
+const {
+    generateVideoThumbnail
+} = require("./services/thumbnailService");
 
 const {
     getYouTubeAuthUrl,
@@ -156,7 +164,10 @@ app.use(
   "/generated",
   express.static(GENERATED_DIR)
 );
-
+app.use(
+    "/api/storage",
+    storageRoutes
+);
 
 /* ============================================================
    HELPERS
@@ -2877,7 +2888,36 @@ await enforceFinalVideoDuration({
 
         }
 
+        // --------------------------------------------------
+// GENERATE PERMANENT VIDEO THUMBNAIL
+// --------------------------------------------------
 
+let thumbnailURL = "";
+
+try {
+
+    const thumbnailResult =
+        await generateVideoThumbnail(
+            finalVideoPath,
+            storyId
+        );
+
+    thumbnailURL =
+        thumbnailResult.url;
+
+    console.log(
+        "🖼️ Thumbnail created:",
+        thumbnailURL
+    );
+
+} catch (thumbnailError) {
+
+    console.warn(
+        "⚠️ THUMBNAIL GENERATION FAILED:",
+        thumbnailError.message
+    );
+
+}
         // --------------------------------------------------
         // SAVE TO VIDEO LIBRARY
         // --------------------------------------------------
@@ -2897,10 +2937,7 @@ await enforceFinalVideoDuration({
         storyId,
 
     thumbnailURL:
-        scenes[0]?.imageFileURL ||
-        scenes[0]?.imageURL ||
-        null,
-
+          thumbnailURL,
     videoURL:
         `/generated/videos/${finalFilename}`,
 
@@ -2977,7 +3014,34 @@ await enforceFinalVideoDuration({
             );
 
         }
+// --------------------------------------------------
+// SMART STORAGE CLEANUP
+// --------------------------------------------------
+// Final video has already been created, validated,
+// and saved to the library.
+// Now remove temporary images, audio,
+// and intermediate video files.
 
+try {
+
+    const cleanupResult =
+        cleanupAfterSuccessfulRender(
+            storyId
+        );
+
+    console.log(
+        "SMART STORAGE CLEANUP:",
+        cleanupResult
+    );
+
+} catch (cleanupError) {
+
+    console.warn(
+        "SMART STORAGE CLEANUP FAILED:",
+        cleanupError.message
+    );
+
+}
 
         // --------------------------------------------------
         // RESPONSE

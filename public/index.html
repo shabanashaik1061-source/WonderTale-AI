@@ -239,7 +239,7 @@ STORY INPUT
                 class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
             >
 
-                <option value="0.5">
+                <option value="0.5" selected>
                     30 seconds
                 </option>
                 <option value="1">
@@ -254,7 +254,7 @@ STORY INPUT
                     4 minutes
                 </option>
 
-                <option value="10" selected>
+                <option value="10" >
                     10 minutes
                 </option>
 
@@ -284,12 +284,10 @@ STORY INPUT
                 class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
             >
 
-                <option value="4">4 Scenes</option>
-                <option value="5">5 Scenes</option>
+                <option value="3">3 Scenes</option>
+                <option value="4" selected>4Scenes</option>
                 <option value="6">6 Scenes</option>
-                <option value="7">7 Scenes</option>
-                <option value="8" selected>8 Scenes</option>
-                <option value="9">9 Scenes</option>
+                <option value="8">8 Scenes</option>
                 <option value="10">10 Scenes</option>
                 <option value="11">11 Scenes</option>
                 <option value="12">12 Scenes</option>
@@ -320,7 +318,7 @@ STORY INPUT
                     16:9 YouTube
                 </option>
 
-                <option value="9:16">
+                <option value="9:16" selected>
                     9:16 Shorts
                 </option>
 
@@ -350,7 +348,7 @@ STORY INPUT
     Fable — Storyteller(female)
 </option>
 
-<option value="rachel">
+<option value="rachel" selected>
     Rachel — Narrator(kid)
 </option>
 
@@ -383,11 +381,11 @@ STORY INPUT
                 class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
             >
 
-                <option value="off" selected>
+                <option value="off">
                     Off
                 </option>
 
-                <option value="on">
+                <option value="on" selected>
                     On
                 </option>
 
@@ -409,11 +407,11 @@ STORY INPUT
                 class="mt-2 w-full rounded-xl bg-slate-900 border border-white/10 p-3"
             >
 
-                <option value="none" selected>
+                <option value="none">
                     None
                 </option>
 
-                <option value="fantasy">
+                <option value="fantasy" selected>
                     ✨ Fantasy
                 </option>
 
@@ -1084,7 +1082,43 @@ STAGE 6 — LIBRARY
         </button>
 
     </div>
+<!-- STORAGE INFO -->
+<div
+    id="storage-info"
+    class="mt-4 p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl"
+>
+    <div class="flex items-center justify-between gap-4">
 
+        <div>
+            <p class="text-sm text-slate-400">
+                💾 Storage Used
+            </p>
+
+            <p
+                id="storage-used"
+                class="text-2xl font-black mt-1"
+            >
+                Checking...
+            </p>
+
+            <p
+                id="storage-details"
+                class="text-xs text-slate-500 mt-1"
+            >
+                Loading storage information...
+            </p>
+        </div>
+
+        <button
+            type="button"
+            onclick="loadStorageInfo()"
+            class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 font-semibold transition"
+        >
+            🔄
+        </button>
+
+    </div>
+</div>
 
     <div
         id="library-loading"
@@ -2970,7 +3004,12 @@ function createVideoCard(video) {
             >
                 📤 Publish to YouTube
             </button>
-
+                <button
+    type="button"
+    class="delete-library-video-btn w-full mt-3 px-4 py-3 rounded-xl bg-white/10 hover:bg-red-600/80 border border-white/10 font-semibold transition"
+>
+    🗑️ Delete Video
+</button>
         </div>
 
     `;
@@ -3249,9 +3288,179 @@ function createVideoCard(video) {
     );
 
 
+        /*
+     * DELETE VIDEO BUTTON
+     */
+
+    const deleteButton =
+        card.querySelector(
+            ".delete-library-video-btn"
+        );
+
+    if (deleteButton) {
+
+        deleteButton.addEventListener(
+            "click",
+            async () => {
+
+                /*
+                 * CHECK VIDEO FILE
+                 */
+
+                if (!video.videoURL) {
+
+                    showError(
+                        "Video file is not available."
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * GET FINAL VIDEO FILENAME
+                 */
+
+                const videoFileName =
+                    video.videoURL
+                        .split("/")
+                        .pop();
+
+
+                if (!videoFileName) {
+
+                    showError(
+                        "Could not determine video filename."
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * CONFIRM DELETE
+                 */
+
+                const confirmed =
+                    confirm(
+                        `Delete "${video.title || "this video"}"?\n\nThis will permanently remove the video from WonderTale storage.`
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                /*
+                 * DISABLE BUTTON
+                 */
+
+                deleteButton.disabled = true;
+
+                deleteButton.classList.add(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+                deleteButton.textContent =
+                    "Deleting...";
+
+
+                try {
+
+                    console.log(
+                        "🗑️ Deleting library video:",
+                        videoFileName
+                    );
+console.log(
+    "🗑️ Full video URL:",
+    video.videoURL
+);
+
+                    const response =
+    await fetch(
+        `${API_BASE}/library/${encodeURIComponent(video.id)}`,
+        {
+            method: "DELETE"
+        }
+    );
+
+                    const data =
+                        await response.json();
+
+
+                    if (
+                        !response.ok ||
+                        !data.success
+                    ) {
+
+                        throw new Error(
+                            data.error ||
+                            data.message ||
+                            "Video deletion failed."
+                        );
+
+                    }
+
+
+                    /*
+                     * SUCCESS
+                     */
+
+                    console.log(
+                        "✅ Video deleted:",
+                        videoFileName
+                    );
+
+
+                    /*
+                     * REFRESH LIBRARY
+                     */
+
+                    await loadVideoLibrary();
+                    await loadStorageInfo();
+
+                } catch (error) {
+
+                    console.error(
+                        "VIDEO DELETE ERROR:",
+                        error
+                    );
+
+
+                    deleteButton.disabled =
+                        false;
+
+                    deleteButton.classList.remove(
+                        "opacity-50",
+                        "cursor-not-allowed"
+                    );
+
+                    deleteButton.textContent =
+                        "🗑️ Delete Video";
+
+
+                    showError(
+                        error.message ||
+                        "Could not delete video."
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
     return card;
 
 }
+
+
 function formatFileSize(bytes) {
 
     if (!bytes) {
@@ -3856,6 +4065,69 @@ async function loadVideoLibrary() {
     }
 
 }
+
+async function loadStorageInfo() {
+
+    const storageUsed =
+        document.getElementById("storage-used");
+
+    const storageDetails =
+        document.getElementById("storage-details");
+
+    if (!storageUsed || !storageDetails) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/storage`
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+            throw new Error(
+                data.error ||
+                "Could not load storage information."
+            );
+        }
+
+        const storage =
+            data.storage;
+
+        storageUsed.textContent =
+            formatFileSize(
+                storage.totalBytes
+            );
+
+        storageDetails.textContent =
+            `${storage.videos.files} videos · ` +
+            `${formatFileSize(storage.music.bytes)} music · ` +
+            `${storage.images.files} temporary images · ` +
+            `${storage.audio.files} temporary audio`;
+
+    } catch (error) {
+
+        console.error(
+            "STORAGE INFO ERROR:",
+            error
+        );
+
+        storageUsed.textContent =
+            "Unavailable";
+
+        storageDetails.textContent =
+            "Could not read storage information.";
+
+    }
+}
+
 /* ============================================================
 INITIALIZE
 ============================================================ */
@@ -3876,6 +4148,7 @@ START APP
 
 checkBackend();
 loadVideoLibrary();
+loadStorageInfo();
 checkYouTubeConnection();
 
 </script>
