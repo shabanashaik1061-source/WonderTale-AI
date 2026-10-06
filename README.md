@@ -1,117 +1,335 @@
 # ✨ WonderTale AI
 
-> Turn simple ideas into narrated story worlds.
+### Turn simple ideas into narrated story worlds.
 
-WonderTale AI is an AI-powered story creation studio that transforms a simple story idea into a complete narrated video.
+**WonderTale AI** is an AI-powered story and video generation studio that transforms a simple story idea into a complete narrated video.
 
-It combines AI story generation, cinematic scene images, AI narration, FFmpeg video rendering, subtitles, background music, video library management, and YouTube publishing into one workflow.
+From **story generation → scene creation → AI images → narration → subtitles → music → final MP4 → video library → YouTube publishing**, WonderTale AI brings the complete storytelling workflow into one application.
 
 ---
 
-## 🌟 Features
+## 🎬 What is WonderTale AI?
 
-### 🪄 AI Story Generation
+Creating an animated or narrated story traditionally requires multiple tools for writing, image generation, voice generation, video editing, subtitles, music, and publishing.
 
-Generate original stories from a simple user prompt.
+WonderTale AI combines these steps into a single workflow.
 
-* AI-powered story creation
+```text
+💡 Story Idea
+     ↓
+🤖 AI Story Generation
+     ↓
+📖 Scene Generation
+     ↓
+🎨 AI Scene Images
+     ↓
+🎙️ AI Narration
+     ↓
+🎬 Video Rendering
+     ↓
+📝 Subtitles + 🎵 Music
+     ↓
+📦 Final MP4
+     ↓
+📚 Video Library
+     ↓
+▶️ YouTube Publishing
+```
+
+---
+
+# 🚀 Key Features
+
+## 🤖 AI Story Generation
+
+Generate complete stories from simple ideas.
+
+### Features
+
+* AI-powered story generation
 * Custom story length
-* Multiple narration voices
+* Structured scene generation
+* Multiple narration voice options
 * Character seed support
-* Scene-based story structure
+* Story-focused prompts
+* Scene-by-scene storytelling structure
 
-### 🎨 AI Scene Images
+### Current Story Model
 
-Create visual scenes for each part of the story using Cloudflare AI image generation.
+```text
+@cf/meta/llama-3.1-8b-instruct-fp8-fast
+```
 
-* AI-generated scene images
-* Character consistency support
+---
+
+## 🎨 AI Scene Image Generation
+
+Every generated scene can receive its own visual representation.
+
+WonderTale AI uses **Cloudflare Workers AI** with the FLUX image generation model.
+
+### Features
+
+* Automatic scene image generation
 * Fantasy and storytelling visuals
-* Automatic scene generation
+* Character seed support
+* Scene-specific prompts
+* Multiple generated scenes
+* Cloud-based image generation
 
-### 🎙️ AI Narration
+### Current Image Model
 
-Convert story narration into spoken audio using Edge TTS.
+```text
+@cf/black-forest-labs/flux-2-klein-4b
+```
 
-Available narration voices:
+---
 
-* **Fable** — Storyteller
-* **Rachel** — Narrator
-* **Onyx** — Deep
-* **Nova** — Warm
-* **Coral** — Friendly
+## 🎙️ AI Narration
 
-### 🎬 AI Video Generation
+WonderTale AI converts generated stories into narrated audio.
 
-WonderTale AI combines generated images and narration into MP4 videos.
+The application uses **Edge TTS** for voice generation.
 
-The rendering pipeline supports:
+### Available Voices
+
+* Fable
+* Rachel
+* Onyx
+* Nova
+* Coral
+* Lily
+
+Voice selection is integrated into the story-to-video pipeline.
+
+---
+
+## 🎬 Video Generation
+
+WonderTale AI converts generated scene images and narration into a complete video.
+
+Instead of relying on a separate AI video model, the application creates the final cinematic video using generated assets and **FFmpeg-based rendering**.
+
+### Video Features
 
 * Scene-based video creation
-* Animated images
+* Animated still images
 * Ken Burns-style camera movement
-* Narration audio
-* Subtitles
+* AI narration
+* Automatic subtitles
 * Background music
-* FFmpeg processing
+* Adjustable music volume
 * Audio/video synchronization
-* Final MP4 rendering
+* Exact target-duration enforcement
+* MP4 output
+* H.264 video encoding
+* AAC audio encoding
 
-### 📚 Video Library
+### Rendering Pipeline
 
-Generated videos can be stored in the WonderTale library.
+```text
+Scene Image
+     +
+Narration Audio
+     +
+Subtitle
+     +
+Background Music
+     ↓
+   FFmpeg
+     ↓
+Scene Video
+     ↓
+Final Concatenation
+     ↓
+Duration Validation
+     ↓
+Final MP4
+```
 
-Users can:
+---
 
-* Watch generated videos
+# 📝 Subtitles
+
+Generated narration can be accompanied by automatically generated subtitles.
+
+WonderTale AI handles:
+
+* Subtitle generation
+* Text wrapping
+* Subtitle timing
+* Subtitle escaping
+* Scene-level subtitle rendering
+* Final video subtitle integration
+
+---
+
+# 🎵 Background Music
+
+WonderTale AI supports background music for generated stories.
+
+Current music categories include:
+
+* Fantasy
+* Adventure
+* Calm
+* Suspense
+
+Music volume can be adjusted during video generation.
+
+The system also ensures the background music matches the final video duration.
+
+---
+
+# 📚 Video Library
+
+Completed videos are stored in the application's video library.
+
+### Library capabilities
+
+* View generated videos
+* Play videos
 * Download videos
-* View generated stories
 * Manage completed videos
-* Publish existing videos to YouTube
+* Delete unwanted videos
+* Publish library videos to YouTube
+* Display permanent video thumbnails
 
-### ▶️ YouTube Publishing
+The library maintains metadata for generated videos separately from temporary media files.
 
-WonderTale AI supports YouTube OAuth integration for publishing generated videos directly to YouTube.
+---
 
-The publishing workflow supports:
+# 🖼️ Permanent Video Thumbnails
+
+WonderTale AI automatically creates a permanent thumbnail from the final rendered MP4.
+
+This solves an important storage problem:
+
+```text
+Temporary Scene Images
+        ↓
+      Render
+        ↓
+    Final MP4
+        ↓
+ Generate Thumbnail
+        ↓
+ Delete Temporary Images
+```
+
+The thumbnail is generated from the final video using FFmpeg and stored separately.
+
+This means deleting temporary scene images does **not** break video-library previews.
+
+---
+
+# 🧹 Smart Storage Management
+
+WonderTale AI includes automatic storage cleanup.
+
+After a successful render, temporary files can be removed while final videos and thumbnails are preserved.
+
+### Automatically cleaned
+
+* Temporary scene images
+* Temporary narration audio
+* Scene video intermediates
+* Concatenated intermediate videos
+* Music-processing intermediates
+
+### Preserved
+
+* Final MP4 videos
+* Permanent thumbnails
+* Music library
+* Story data
+* Video library metadata
+
+### Storage Dashboard
+
+The frontend displays storage information such as:
+
+```text
+Storage Used
+────────────
+Videos
+Music
+Temporary Images
+Temporary Audio
+```
+
+Users can also manually delete completed videos.
+
+> If video rendering fails, source media is retained so the render can be debugged or retried.
+
+---
+
+# ▶️ YouTube Publishing
+
+WonderTale AI includes YouTube integration through the **YouTube Data API and OAuth 2.0**.
+
+Users can connect their YouTube account and publish videos directly from the application.
+
+### Supported publishing options
 
 * YouTube authentication
+* OAuth callback handling
+* Upload generated videos
 * Video title
 * Description
 * Tags
-* Privacy settings
-* Video upload
-* Publishing videos from the library
+* Privacy setting
+* Publishing from the video library
+
+### YouTube Flow
+
+```text
+WonderTale Video Library
+          ↓
+    Connect YouTube
+          ↓
+      OAuth 2.0
+          ↓
+ Select Library Video
+          ↓
+Title + Description + Tags
+          ↓
+      Privacy
+          ↓
+   YouTube Upload
+```
 
 ---
 
-## 🏗️ Project Structure
+# 🏗️ Project Architecture
 
 ```text
 WonderTale-AI/
-├──.venv
+│
+├── .venv/
+│
 ├── generated/
 │   ├── audio/
 │   ├── images/
 │   ├── music/
+│   ├── stories/
 │   ├── thumbnails/
-|   │── stories/
-│   |   └── stories.json 
 │   └── videos/
-     
 │
 ├── local-image-ai/
 │
 ├── public/
-│   ├── CSS/
-│   ├── js/
 │   └── index.html
 │
 ├── server/
 │   ├── data/
 │   ├── routes/
+│   │   └── storageRoutes.js
+│   │
 │   ├── services/
+│   │   ├── storageService.js
 │   │   ├── storyService.js
+│   │   ├── thumbnailService.js
 │   │   ├── videoRenderer.js
 │   │   └── youtubeService.js
 │   │
@@ -121,6 +339,7 @@ WonderTale-AI/
 ├── tts/
 │   └── generate_voice.py
 │
+├── cloudflare-test.jpg
 ├── .env
 ├── .env.example
 ├── .gitignore
@@ -131,148 +350,152 @@ WonderTale-AI/
 
 ---
 
-## ⚙️ Technology Stack
+# 🧩 Main Components
 
-### Frontend
+## `public/`
 
-* HTML
-* CSS
-* JavaScript
-* Tailwind CSS
+Contains the WonderTale AI frontend.
 
-### Backend
-
-* Node.js
-* Express.js
-
-### AI
-
-* Cloudflare Workers AI
-* LLM-based story generation
-* Cloudflare FLUX image generation
-* Edge TTS narration
-
-### Video Processing
-
-* FFmpeg
-* FFprobe
-* MP4 rendering
-* Audio/video synchronization
-* Subtitle processing
-* Scene animation
-* Background music
-
-### Integration
-
-* YouTube Data API
-* YouTube OAuth 2.0
-
----
-
-## 🔄 How WonderTale AI Works
+The current frontend is implemented in:
 
 ```text
-                    💡 Story Idea
-                         │
-                         ▼
-                🪄 AI Story Generation
-                         │
-                         ▼
-                    📖 Story Scenes
-                         │
-                         ▼
-                 🎨 AI Scene Images
-                         │
-                         ▼
-                  🎙️ AI Narration
-                         │
-                         ▼
-                🎬 Scene Video Rendering
-                         │
-                         ▼
-              🎵 Music + Subtitles
-                         │
-                         ▼
-                    🎞️ Final MP4
-                         │
-                         ▼
-                   📚 Video Library
-                         │
-                         ▼
-                  ▶️ YouTube Publishing
+public/index.html
+```
+
+It provides the user interface for:
+
+* Story generation
+* Scene generation
+* Image generation
+* Narration generation
+* Video generation
+* Library management
+* Storage information
+* YouTube publishing
+
+---
+
+## `server/server.js`
+
+Main Express server responsible for connecting the frontend with the backend services.
+
+It handles:
+
+* API requests
+* Story generation
+* Image generation
+* Audio generation
+* Video rendering
+* Video library operations
+* Storage operations
+* YouTube authentication
+* YouTube publishing
+* Static generated-media serving
+
+---
+
+## `server/services/storyService.js`
+
+Responsible for story-related processing and AI story generation logic.
+
+---
+
+## `server/services/videoRenderer.js`
+
+Responsible for the FFmpeg video-rendering pipeline.
+
+It handles:
+
+* Scene rendering
+* Image animation
+* Audio integration
+* Subtitles
+* Background music
+* Concatenation
+* Duration enforcement
+* Final MP4 creation
+
+---
+
+## `server/services/thumbnailService.js`
+
+Generates permanent thumbnails from completed videos.
+
+```text
+Final MP4
+   ↓
+FFmpeg frame extraction
+   ↓
+Permanent JPG thumbnail
 ```
 
 ---
 
-## 🚀 Getting Started
+## `server/services/storageService.js`
 
-### 1. Clone the Repository
+Handles WonderTale's storage-management system.
 
-```bash
-git clone https://github.com/shabanashaik1061-source/WonderTale-AI.git
-cd WonderTale-AI
-git status
+Responsibilities include:
+
+* Storage calculation
+* Temporary-media cleanup
+* Intermediate-file cleanup
+* Final-video deletion
+* Storage statistics
+
+---
+
+## `server/services/youtubeService.js`
+
+Handles YouTube-related service functionality used by the application.
+
+---
+
+## `server/routes/storageRoutes.js`
+
+Provides storage-management API routes.
+
+### Storage API
+
+```text
+GET    /api/storage
+DELETE /api/storage/temporary
+DELETE /api/storage/video/:filename
 ```
 
 ---
 
-### 2. Install Node.js Dependencies
+## `tts/generate_voice.py`
 
-```bash
-npm install
-```
+Python-based narration generation using Edge TTS.
 
 ---
 
-### 3. Install Python Dependencies
+# 🛠️ Technology Stack
 
-WonderTale AI uses Python for AI narration.
-
-Create a virtual environment:
-
-```bash
-python -m venv .venv
-```
-
-Activate it on Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-Install Edge TTS:
-
-```bash
-pip install edge-tts
-```
+| Layer               | Technology            |
+| ------------------- | --------------------- |
+| Frontend            | HTML, CSS, JavaScript |
+| UI                  | Tailwind CSS          |
+| Backend             | Node.js               |
+| Server              | Express.js            |
+| Story AI            | Cloudflare Workers AI |
+| Story Model         | Llama 3.1 8B          |
+| Image AI            | Cloudflare FLUX       |
+| Image Model         | FLUX.2 Klein 4B       |
+| Text-to-Speech      | Edge TTS              |
+| Video Processing    | FFmpeg                |
+| Media Analysis      | FFprobe               |
+| YouTube Integration | YouTube Data API      |
+| Authentication      | Google OAuth 2.0      |
+| Storage             | Local filesystem      |
+| Deployment          | Render                |
 
 ---
 
-### 4. Install FFmpeg
-
-WonderTale AI requires FFmpeg for video and audio processing.
-
-Check FFmpeg:
-
-```bash
-ffmpeg -version
-```
-
-Check FFprobe:
-
-```bash
-ffprobe -version
-```
-
-Both commands should return the installed version.
-
----
-
-## 🔐 Environment Variables
+# 🔐 Environment Variables
 
 Create a `.env` file in the project root.
-
-Example:
 
 ```env
 CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
@@ -280,256 +503,171 @@ CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
 
 YOUTUBE_CLIENT_ID=your_youtube_client_id
 YOUTUBE_CLIENT_SECRET=your_youtube_client_secret
+
 YOUTUBE_REDIRECT_URI=http://localhost:3000/auth/youtube/callback
 ```
 
-### ⚠️ Important
+### Important
 
-Never share  your real `.env` file to GitHub.
+Never commit `.env` or OAuth credentials to GitHub.
 
-Your API keys, tokens, client secrets, and OAuth credentials must remain private.
+The project `.gitignore` protects:
 
-Use `.env.example` to show the required variable names without exposing real secrets.
+```text
+.env
+server/data/youtubeTokens.json
+```
 
 ---
 
-## ▶️ Run the Application
+# ⚙️ Installation
 
-From the project root:
+## 1. Clone the repository
 
 ```bash
+git clone https://github.com/shabanashaik1061-source/WonderTale-AI.git
+cd WonderTale-AI
+```
+
+---
+
+## 2. Install Node.js dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 3. Create Python virtual environment
+
+### Windows
+
+```powershell
+python -m venv .venv
+```
+
+Activate it:
+
+```powershell
+.venv\Scripts\activate
+```
+
+Install Edge TTS:
+
+```powershell
+pip install edge-tts
+```
+
+---
+
+## 4. Install FFmpeg
+
+Make sure FFmpeg and FFprobe are available in your system PATH.
+
+Verify:
+
+```powershell
+ffmpeg -version
+```
+
+```powershell
+ffprobe -version
+```
+
+---
+
+## 5. Configure environment variables
+
+Create:
+
+```text
+.env
+```
+
+using `.env.example` as the template.
+
+---
+
+# ▶️ Run WonderTale AI
+
+Start the backend:
+
+```powershell
 node server/server.js
 ```
 
-The application will start on:
+The application will be available at:
 
 ```text
 http://localhost:3000
 ```
 
-You should see:
-
-```text
-WONDER TALE AI STUDIO BACKEND
-
-Server: http://localhost:3000
-
-✅ SERVER IS LISTENING
-```
-
 ---
 
-## 📱 Local Mobile Access
+# 📱 Local Network Access
 
-WonderTale AI can also be accessed from another phone or computer connected to the same Wi-Fi network.
+WonderTale AI can also be accessed from another device on the same Wi-Fi network.
 
 For example:
+
+```text
+Laptop
+  ↓
+192.168.x.x:3000
+  ↓
+Phone
+```
+
+Open the laptop's local IP address from the phone:
 
 ```text
 http://YOUR-COMPUTER-IP:3000
 ```
 
-Example:
-
-```text
-http://192.168.0.114:3000
-```
-
-The computer running the WonderTale AI backend must remain powered on and the server must remain running.
-
-This is useful for local testing on mobile devices.
+The laptop must remain running while the backend is being used.
 
 ---
 
-## 🎥 Video Generation Pipeline
+# 🌐 Deployment
 
-WonderTale AI generates videos through several stages.
+The project currently has a deployed version running on **Render**.
+
+Production/demo deployment:
 
 ```text
-1. User enters story idea
-        ↓
-2. AI generates the story
-        ↓
-3. Story is divided into scenes
-        ↓
-4. AI generates scene images
-        ↓
-5. Edge TTS generates narration
-        ↓
-6. FFmpeg creates animated scene videos
-        ↓
-7. Narration is synchronized
-        ↓
-8. Subtitles are added
-        ↓
-9. Background music is added
-        ↓
-10. Final MP4 is created
+https://wondertale-ai.onrender.com
 ```
 
-The final result is stored in the generated video directory.
+Health endpoint:
+
+```text
+https://wondertale-ai.onrender.com/api/health
+```
+
+YouTube OAuth callback:
+
+```text
+https://wondertale-ai.onrender.com/auth/youtube/callback
+```
+
+### Deployment Note
+
+The current application still relies on local filesystem storage, FFmpeg, and local Edge TTS execution for parts of the media-generation pipeline.
+
+Therefore, the current deployment should be considered a **working deployment/demo environment**, rather than a fully cloud-native production architecture.
+
+Future versions can move media processing and persistent storage to dedicated cloud infrastructure.
 
 ---
 
-## 🎙️ Narration Voices
+# 🔒 Security
 
-WonderTale AI currently supports multiple narration styles.
-
-| Voice  | Style       |
-| ------ | ----------- |
-| Fable  | Storyteller |
-| Rachel | Narrator    |
-| Onyx   | Deep        |
-| Nova   | Warm        |
-| Coral  | Friendly    |
-
-The narration system uses Microsoft Edge TTS voices through the `edge-tts` Python package.
-
----
-
-## 🎨 AI Image Generation
-
-WonderTale AI uses Cloudflare Workers AI for scene image generation.
-
-The image generation pipeline creates visual scenes based on the generated story.
-
-The current image model is:
-
-```text
-@cf/black-forest-labs/flux-2-klein-4b
-```
-
-Generated images are temporarily stored inside:
-
-```text
-generated/images/
-```
-
----
-
-## 🧠 AI Story Generation
-
-Story generation uses a Cloudflare Workers AI language model.
-
-The current model is:
-
-```text
-@cf/meta/llama-3.1-8b-instruct-fp8-fast
-```
-
-The generated story is converted into structured scenes for visual generation and video rendering.
-
----
-
-## 🎬 Video Rendering
-
-Video rendering is handled by FFmpeg.
-
-The renderer supports:
-
-* Image-to-video scenes
-* Camera movement
-* Scene duration control
-* Narration synchronization
-* Subtitles
-* Background music
-* MP4 output
-* Final duration enforcement
-
-Generated videos are stored inside:
-
-```text
-generated/videos/
-```
-
----
-
-## 📚 Story and Video Storage
-
-Story information is stored in:
-
-```text
-stories/stories.json
-```
-
-Generated media is organized into:
-
-```text
-generated/
-├── audio/
-├── images/
-├── music/
-├── thumbnails/
-└── videos/
-```
-
-Generated media files are excluded from Git using `.gitignore`.
-
----
-
-## ▶️ YouTube Integration
-
-WonderTale AI supports YouTube publishing using:
-
-```text
-YouTube Data API
-YouTube OAuth 2.0
-```
-
-Users can authenticate their YouTube account and publish generated videos.
-
-Publishing supports:
-
-* Title
-* Description
-* Tags
-* Privacy status
-* Existing library videos
-
-For local development, the OAuth callback uses:
-
-```text
-http://localhost:3000/auth/youtube/callback
-```
-
-For production deployment, the callback URL must be changed to the deployed application's public URL and registered in Google Cloud.
-
----
-
-## 🔒 Security
-
-Never commit sensitive credentials.
-
-The following files should remain private:
+Sensitive files are excluded from Git.
 
 ```text
 .env
 server/data/youtubeTokens.json
-```
-
-The project `.gitignore` prevents these files from being uploaded to GitHub.
-
-Do not expose:
-
-* Cloudflare API tokens
-* Cloudflare account credentials
-* YouTube client secrets
-* OAuth tokens
-* Private API keys
-
----
-
-## 🧹 Git Ignore
-
-Generated media and sensitive files are intentionally excluded from Git.
-
-Important ignored content includes:
-
-```text
-node_modules/
-.env
-server/data/youtubeTokens.json
-
 generated/images/*
 generated/audio/*
 generated/videos/*
@@ -537,134 +675,219 @@ generated/thumbnails/*
 generated/music/*
 ```
 
-This keeps the GitHub repository smaller and protects private credentials.
+Generated media is intentionally kept out of the Git repository to avoid committing large files and personal/generated content.
 
 ---
 
-## 📱 Future Online Deployment
+# 🧪 Current Workflow
 
-The long-term goal is to deploy WonderTale AI as an online service.
-
-The planned architecture is:
+A typical WonderTale generation process looks like:
 
 ```text
-                    📱 User Phone
-                         │
-                         ▼
-                  🌐 WonderTale Web App
-                         │
-                         ▼
-                    ☁️ Backend API
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-     🤖 Story AI     🎨 Image AI     🎙️ TTS
-          │              │              │
-          └──────────────┼──────────────┘
-                         ▼
-                   🎬 FFmpeg
-                         │
-                         ▼
-                    ☁️ Storage
-                         │
-                         ▼
-                   📚 Video Library
-                         │
-                         ▼
-                    ▶️ YouTube
+1. Enter story idea
+        ↓
+2. Generate AI story
+        ↓
+3. Generate structured scenes
+        ↓
+4. Generate scene images
+        ↓
+5. Generate narration
+        ↓
+6. Select music
+        ↓
+7. Render scene videos
+        ↓
+8. Add subtitles
+        ↓
+9. Add background music
+        ↓
+10. Combine scenes
+        ↓
+11. Enforce final duration
+        ↓
+12. Validate MP4
+        ↓
+13. Generate permanent thumbnail
+        ↓
+14. Clean temporary media
+        ↓
+15. Save to Video Library
+        ↓
+16. Optional YouTube upload
 ```
 
-The goal is to eventually allow users to create videos directly from their phones without keeping a personal computer running.
+---
+
+# 📊 Design Goals
+
+WonderTale AI is designed around several principles:
+
+### 🎯 Simplicity
+
+A user should be able to go from an idea to a finished story video without needing professional video-editing knowledge.
+
+### ⚡ Automation
+
+The application automates repetitive tasks such as:
+
+* Scene creation
+* Image generation
+* Narration
+* Subtitle generation
+* Video rendering
+* Music integration
+* Thumbnail generation
+* Storage cleanup
+* YouTube publishing
+
+### 🎨 Storytelling
+
+The focus is not simply generating random AI content.
+
+The system is designed around creating a connected storytelling experience using:
+
+* Characters
+* Scenes
+* Narration
+* Visuals
+* Music
+* Subtitles
+* Cinematic movement
+
+### 🧹 Efficient Storage
+
+Temporary media should not accumulate unnecessarily.
+
+The application therefore preserves final outputs while automatically cleaning intermediate assets after successful rendering.
 
 ---
 
-## 🔮 Future Improvements
+# 🔮 Future Improvements
 
-Planned improvements include:
+Potential future development includes:
 
-* Mobile-first interface
-* Online deployment
-* Cloud video storage
-* Character consistency across scenes
-* More natural narration
-* More narration voices
-* More visual styles
-* Story templates
-* Background music library
-* Progressive Web App support
-* Automated YouTube publishing
-* User accounts
-* Cloud story library
-* Faster video generation
-* Improved video transitions
-
----
-
-## 🎯 Project Goal
-
-WonderTale AI is designed to make AI storytelling simple.
-
-The core idea is:
-
-> **Idea → Story → Scenes → Narration → Video → YouTube**
-
-The long-term vision is to create a simple AI story studio where anyone can turn an idea into a narrated story video without needing professional video-editing skills.
+* 📱 Progressive Web App experience
+* ☁️ Cloud object storage
+* ⚙️ Cloud-based FFmpeg workers
+* 🎙️ More narration providers
+* 🎨 More image-generation models
+* 🧑‍🎨 Advanced character consistency
+* 📝 Improved subtitle styling
+* 🎞️ More cinematic transitions
+* 🖼️ Custom thumbnails
+* 👤 User accounts
+* 💾 Persistent cloud video libraries
+* 📊 Usage analytics
+* 💳 Subscription/payment system
+* 📤 Additional publishing platforms
+* 🔄 Background rendering jobs
+* 🚀 Scalable production architecture
 
 ---
 
-## 📌 Project Status
+# 📁 Generated Media Strategy
 
-**Active Development 🚀**
+WonderTale separates temporary media from final outputs.
 
-WonderTale AI currently has a working local story-to-video generation pipeline.
+```text
+generated/
+│
+├── images/       → temporary scene images
+├── audio/        → temporary narration audio
+├── music/        → background music
+├── videos/       → final rendered videos
+├── thumbnails/   → permanent video thumbnails
+└── stories/      → story-related data
+```
 
-Current working capabilities include:
+Temporary images and audio are cleaned after successful rendering.
 
-* ✅ AI story generation
-* ✅ AI scene generation
-* ✅ AI narration
-* ✅ Multiple narration voices
-* ✅ Animated scene videos
-* ✅ Subtitle generation
-* ✅ Background music support
-* ✅ Final MP4 rendering
-* ✅ Video library
-* ✅ YouTube OAuth integration
-* ✅ YouTube video publishing
-* ✅ Local mobile access
+Final videos and thumbnails remain available for the Video Library.
 
 ---
 
-## 🌱 Vision
+# 💡 Why WonderTale AI?
 
-WonderTale AI aims to make storytelling accessible to everyone.
+WonderTale AI brings several traditionally separate creative tools into one workflow.
 
-No complicated video editing.
+Instead of:
 
-No professional production setup.
+```text
+AI Writer
+   +
+Image Generator
+   +
+Voice Generator
+   +
+Video Editor
+   +
+Subtitle Tool
+   +
+Music Editor
+   +
+YouTube
+```
 
-Just:
+WonderTale AI aims to provide:
 
-**Imagine → Generate → Watch → Share**
+```text
+             WONDER TALE AI
+                    │
+       ┌────────────┼────────────┐
+       ↓            ↓            ↓
+     Story        Visuals       Voice
+       │            │            │
+       └────────────┼────────────┘
+                    ↓
+                 Video
+                    ↓
+          Library + YouTube
+```
 
 ---
 
-## 👩‍💻 Author
+# 👩‍💻 Author
 
 **Shaik Shabana**
 
-WonderTale AI — AI Story Creation Studio
+Aspiring AI / Data / Software Engineer
+
+### Project
+
+**WonderTale AI — AI Story & Video Generation Studio**
 
 ---
 
-## ⭐ Support
+# ⭐ Project Status
 
-If you like the idea behind WonderTale AI, consider giving the project a ⭐ on GitHub.
+**Current Status: Working Prototype / Active Development**
+
+The core story-to-video workflow is functional, including:
+
+* ✅ AI story generation
+* ✅ Scene generation
+* ✅ Cloudflare FLUX images
+* ✅ Edge TTS narration
+* ✅ Multiple voices
+* ✅ FFmpeg video rendering
+* ✅ Subtitles
+* ✅ Background music
+* ✅ Final-duration enforcement
+* ✅ Permanent thumbnails
+* ✅ Smart storage cleanup
+* ✅ Video library
+* ✅ Video deletion
+* ✅ YouTube OAuth
+* ✅ YouTube video upload
+* ✅ Render deployment
+
+WonderTale AI is continuing toward a more scalable, polished, and production-ready AI storytelling platform.
 
 ---
 
-## 📄 License
+## 📜 License
 
 This project is currently under active development.
 
-License information will be added as the project moves toward public release.
+License information can be added when the project is ready for public distribution.
